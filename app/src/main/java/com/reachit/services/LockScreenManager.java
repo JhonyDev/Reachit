@@ -1,5 +1,7 @@
 package com.reachit.services;
 
+import static com.reachit.application.App.CHANNEL_ID;
+
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -12,7 +14,6 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.IBinder;
-import android.os.PowerManager;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -24,8 +25,6 @@ import com.reachit.activities.LockSettingsActivity;
 import com.reachit.recievers.ScreenStateReceiver;
 
 import java.util.Timer;
-
-import static com.reachit.application.App.CHANNEL_ID;
 
 public class LockScreenManager extends Service {
 
