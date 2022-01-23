@@ -1,5 +1,7 @@
 package com.reachit.activities;
 
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,10 +10,8 @@ import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,13 +39,10 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.reachit.MainActivity;
 import com.reachit.R;
 import com.reachit.services.LockScreenManager;
 
 import java.util.Objects;
-
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class SMSRemoteSettings extends AppCompatActivity {
     public static final String SHARED_PREFS = "sharedPrefs";
@@ -82,7 +79,7 @@ public class SMSRemoteSettings extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_s_m_s_remote_settings);
         loadData();
-        prepareAD ();
+        prepareAD();
         locationSwitch = findViewById(R.id.checkbox_location);
         btnChangePassword = findViewById(R.id.change_password);
         checkScream = findViewById(R.id.check_scream);
@@ -236,21 +233,20 @@ public class SMSRemoteSettings extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(mInterstitialAd.isLoaded ()){
-            mInterstitialAd.show ();
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
 
-            mInterstitialAd.setAdListener (new AdListener (){
+            mInterstitialAd.setAdListener(new AdListener() {
                 @Override
                 public void onAdClosed() {
-                    super.onAdClosed ();
-                    finish ();
+                    super.onAdClosed();
+                    finish();
                 }
             });
+        } else {
+            super.onBackPressed();
         }
-        else{
-            super.onBackPressed ();
-        }
-       // super.onBackPressed();
+        // super.onBackPressed();
         //startActivity(new Intent(SMSRemoteSettings.this, MainActivity.class));
         //finish();
     }
@@ -374,9 +370,9 @@ public class SMSRemoteSettings extends AppCompatActivity {
         alertDialog.show();
 
     }
-    public void prepareAD()
-    {
-        mInterstitialAd = new InterstitialAd (this);
+
+    public void prepareAD() {
+        mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
         AdRequest adRequest = new AdRequest.Builder().build();
         mInterstitialAd.loadAd(adRequest);

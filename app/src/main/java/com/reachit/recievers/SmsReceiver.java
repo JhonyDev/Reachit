@@ -34,18 +34,14 @@ public class SmsReceiver extends BroadcastReceiver {
         // TODO: This method is called when the BroadcastReceiver is receiving
         Log.i("TAG", "msg Received");
         mediaPlayer = MediaPlayer.create(context, R.raw.all_might_i_am_here);
-        if (intent.getAction() == SMS_RECEIVED) {
+        if (intent.getAction().equals(SMS_RECEIVED)) {
             Bundle dataBundle = intent.getExtras();
             if (dataBundle != null) {
                 Object[] mypdu = (Object[]) dataBundle.get("pdus");
                 final SmsMessage[] message = new SmsMessage[mypdu.length];
                 for (int i = 0; i < mypdu.length; i++) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        String format = dataBundle.getString("format");
-                        message[i] = SmsMessage.createFromPdu((byte[]) mypdu[i], format);
-                    } else {
-                        message[i] = SmsMessage.createFromPdu((byte[]) mypdu[i]);
-                    }
+                    String format = dataBundle.getString("format");
+                    message[i] = SmsMessage.createFromPdu((byte[]) mypdu[i], format);
                     msg = message[i].getMessageBody();
                     phoneNo = message[i].getOriginatingAddress();
                 }

@@ -145,7 +145,7 @@ public class SetPatternActivity extends AppCompatActivity implements PatternLock
                 public void onClick(View v) {
                     LockScreenManager.pattern = ptrn;
                     patternLockView.setEnabled(true);
-                    Intent intent = new Intent(SetPatternActivity.this, LockSettingsActivity.class);
+                    Intent intent = new Intent(SetPatternActivity.this, MainScreen.class);
                     startActivity(intent);
                     Toast.makeText(SetPatternActivity.this, "Pattern Updated", Toast.LENGTH_SHORT).show();
                     finish();

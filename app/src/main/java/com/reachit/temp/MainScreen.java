@@ -87,9 +87,8 @@ public class MainScreen extends AppCompatActivity {
             LockSettingsActivity.drawable = bg;
             LockSettingsActivity.imageURI = uri.toString();
 //            imageView.setImageDrawable(bg);
-        } else {
-//            imageView.setImageResource(R.drawable.lockscreen_background);
-        }
+        }  //            imageView.setImageResource(R.drawable.lockscreen_background);
+
 
         setPattern = findViewById(R.id.set_pattern);
         i = new Intent(this, LockScreenManager.class);
@@ -126,25 +125,6 @@ public class MainScreen extends AppCompatActivity {
             }
         }
         return false;
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (mInterstitialAd.isLoaded()) {
-            mInterstitialAd.show();
-
-            mInterstitialAd.setAdListener(new AdListener() {
-                @Override
-                public void onAdClosed() {
-                    super.onAdClosed();
-                    finish();
-                }
-            });
-        } else {
-            super.onBackPressed();
-        }
-        //super.onBackPressed();
-        //startActivity(new Intent(LockSettingsActivity.this, MainActivity.class));
     }
 
     @Override
