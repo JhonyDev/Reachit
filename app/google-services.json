@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "769551865874",
+    "project_id": "lma-security",
+    "storage_bucket": "lma-security.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:769551865874:android:583226ce356b282f2e20cb",
+        "android_client_info": {
+          "package_name": "com.lma"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "769551865874-a5lk4f0n7vlvt68e0vdeu3ep2jkng0gj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCorL6E4Q_b16QLlfUNU70xxxWUgkoHG9s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "769551865874-a5lk4f0n7vlvt68e0vdeu3ep2jkng0gj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

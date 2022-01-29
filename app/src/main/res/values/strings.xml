@@ -22,5 +22,13 @@
     <string name="scream_command">\t\t\t\t2. scream: \n\t\t\t\t\t\t\t\tPhone starts screaming \'I am here\'\n\t\t\t\t\t\t\t\teven when it is silent</string>
     <string name="stop_command">\t\t\t\t3. stop: \n\t\t\t\t\t\t\t\tPhone stops screaming.</string>
     <string name="blink_flash_command">\t\t\t\t4. blink flash: \n\t\t\t\t\t\t\t\tPhone blinks flash\n\t\t\t\t\t\t\t\tfor few seconds</string>
+    <string name="welcome_back_sign_in_to_continue"><b>Welcome Back!</b> Sign in to continue</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="remember_me">Remember_me</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="sl">-</string>
+    <string name="no_account">No Account?</string>
+    <string name="sign_up">Sign Up</string>
 
 </resources>

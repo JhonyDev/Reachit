@@ -82,7 +82,7 @@
             android:textSize="23sp" />
     </LinearLayout>
 
-    <com.reachit.viewpager.VerticalViewPager
+    <com.lma.viewpager.VerticalViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
