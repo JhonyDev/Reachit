@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +27,13 @@ import com.lma.utils.Utils;
 import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity implements Info {
+
+    /**
+     * FIREBASE CONFIGURATION
+     * Email = fyear901@gmail.com
+     * Password = finalyearproject
+     */
+
     public static Activity context;
     EditText etEmail;
     EditText etPassword;
@@ -38,7 +47,6 @@ public class LoginActivity extends AppCompatActivity implements Info {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-
         context = this;
 
         etEmail = findViewById(R.id.et_email);
@@ -46,12 +54,11 @@ public class LoginActivity extends AppCompatActivity implements Info {
 
         loadingDialog = new Dialog(this);
         DialogUtils.initLoadingDialog(loadingDialog);
-
+//
 //        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 //            loadingDialog.show();
 //            initUserData();
 //        }
-
 
     }
 
@@ -99,8 +106,15 @@ public class LoginActivity extends AppCompatActivity implements Info {
                     loadingDialog.dismiss();
                     if (task.isSuccessful()) {
                         initUserData();
-                    } else
+                    } else {
                         Objects.requireNonNull(task.getException()).printStackTrace();
+                        try {
+                            Toast.makeText(LoginActivity.this,
+                                    task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        } catch (NullPointerException e) {
+                            Log.i(TAG, "initSignIn: Null Exception");
+                        }
+                    }
                 });
     }
 

@@ -2,12 +2,14 @@ package com.lma.activities;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.RadioButton;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -99,19 +101,42 @@ public class SignupActivity extends AppCompatActivity implements Info {
         if (!Utils.validEt(etPassword, strEtPassword))
             return;
 
-        if (!strEtPassword.equals(strEtConfirmPassword))
+        if (!strEtPassword.equals(strEtConfirmPassword)) {
+            etConfirmPassword.setError("Password not matched");
             return;
+        }
 
         userModel = new UserPojo(strEtUserName,
                 strEtEmail,
                 "",
-                "gender",
                 "",
                 "",
                 "",
-                "", "", "");
+                "",
+                "",
+                "",
+                "");
 
-
+        dgLoading.show();
+        Utils.getReference()
+                .child(NODE_USERS)
+                .setValue(userModel)
+                .addOnCompleteListener(task -> {
+                    dgLoading.dismiss();
+                    if (task.isSuccessful()) {
+                        LoginActivity.context.finish();
+                        Utils.currentUser = userModel;
+                        startActivity(new Intent(SignupActivity.this, DashboardActivity.class));
+                        finish();
+                    } else {
+                        Toast.makeText(SignupActivity.this, "something wrong", Toast.LENGTH_SHORT).show();
+                        if (task.getException() != null) {
+                            Log.i(TAG, "signUp: " + task.getException().getMessage());
+                            task.getException().printStackTrace();
+                            Toast.makeText(SignupActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
 }

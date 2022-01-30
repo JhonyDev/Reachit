@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".activities.SignupActivity">
 
     <TextView
@@ -12,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:drawablePadding="20dp"
-        android:drawableTint="@color/blue"
+        android:drawableTint="@color/green"
         android:onClick="back"
         android:text="@string/sign_up"
         android:textColor="@color/black"
@@ -206,6 +207,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/green" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginBottom="70dp"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:lottie_autoPlay="true"
+        app:lottie_enableMergePathsForKitKatAndAbove="true"
+        app:lottie_imageAssetsFolder="images/"
+        app:lottie_rawRes="@raw/security"
+        app:lottie_repeatCount="0"
+        app:lottie_repeatMode="restart" />
 
     <ImageView
         android:id="@+id/imageView2"

@@ -36,7 +36,7 @@
                 app:lottie_autoPlay="true"
                 app:lottie_rawRes="@raw/loading"
                 app:lottie_repeatCount="99999"
-                app:lottie_repeatMode="restart" />
+                app:lottie_repeatMode="reverse" />
 
             <TextView
                 android:layout_width="wrap_content"

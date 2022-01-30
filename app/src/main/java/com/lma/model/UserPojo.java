@@ -4,8 +4,8 @@ public class UserPojo {
 
     String username;
     String email;
-    String age;
-    String gender;
+    String phoneNumber;
+    String emergencyPhoneNumber;
     String height;
     String weight;
     String BMI;
@@ -19,8 +19,8 @@ public class UserPojo {
     public UserPojo(
             String username,
             String email,
-            String age,
-            String gender,
+            String phoneNumber,
+            String emergencyPhoneNumber,
             String height,
             String weight,
             String BMI,
@@ -30,8 +30,8 @@ public class UserPojo {
     ) {
         this.username = username;
         this.email = email;
-        this.age = age;
-        this.gender = gender;
+        this.phoneNumber = phoneNumber;
+        this.emergencyPhoneNumber = emergencyPhoneNumber;
         this.height = height;
         this.weight = weight;
         this.BMI = BMI;
@@ -56,20 +56,20 @@ public class UserPojo {
         this.email = email;
     }
 
-    public String getAge() {
-        return age;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setAge(String age) {
-        this.age = age;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
-    public String getGender() {
-        return gender;
+    public String getEmergencyPhoneNumber() {
+        return emergencyPhoneNumber;
     }
 
-    public void setGender(String gender) {
-        this.gender = gender;
+    public void setEmergencyPhoneNumber(String emergencyPhoneNumber) {
+        this.emergencyPhoneNumber = emergencyPhoneNumber;
     }
 
     public String getHeight() {

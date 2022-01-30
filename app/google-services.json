@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "769551865874",
-    "project_id": "lma-security",
-    "storage_bucket": "lma-security.appspot.com"
+    "project_number": "398254592051",
+    "project_id": "final-year-534ca",
+    "storage_bucket": "final-year-534ca.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:769551865874:android:583226ce356b282f2e20cb",
+        "mobilesdk_app_id": "1:398254592051:android:9ded75a0067b5acd849346",
         "android_client_info": {
           "package_name": "com.lma"
         }
       },
       "oauth_client": [
         {
-          "client_id": "769551865874-a5lk4f0n7vlvt68e0vdeu3ep2jkng0gj.apps.googleusercontent.com",
+          "client_id": "398254592051-a4gc9a3o5e35i7cegk9faita04g13ket.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCorL6E4Q_b16QLlfUNU70xxxWUgkoHG9s"
+          "current_key": "AIzaSyAM1xyBhP6PUYvdiFxflfq7L92glcwqX5Q"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "769551865874-a5lk4f0n7vlvt68e0vdeu3ep2jkng0gj.apps.googleusercontent.com",
+              "client_id": "398254592051-a4gc9a3o5e35i7cegk9faita04g13ket.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
