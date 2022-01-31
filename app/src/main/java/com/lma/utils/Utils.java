@@ -11,7 +11,7 @@ public class Utils {
     public static UserPojo currentUser;
 
     public static DatabaseReference getReference(){
-        return FirebaseDatabase.getInstance().getReference();
+        return FirebaseDatabase.getInstance("https://final-year-534ca-default-rtdb.firebaseio.com/").getReference();
     }
 
     public static boolean validEt(EditText etUserName, String strEtUserName) {

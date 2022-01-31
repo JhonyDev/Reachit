@@ -126,7 +126,8 @@ public class LoginActivity extends AppCompatActivity implements Info {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         loadingDialog.dismiss();
-
+                        startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
+                        finish();
                     }
 
                     @Override

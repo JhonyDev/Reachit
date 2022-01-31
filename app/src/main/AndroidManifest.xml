@@ -8,7 +8,9 @@
     <uses-permission android:name="android.permission.BROADCAST_SMS" />
     <uses-permission android:name="android.permission.CAMERA" />
 
-    <uses-feature android:name="android.hardware.camera2" /> <!-- <uses-permission android:name="android.permission.INTERNET"/> -->
+    <uses-feature android:name="android.hardware.camera2" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.PREVENT_POWER_KEY" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
@@ -40,8 +42,9 @@
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-3940256099942544~3347511713" />
 
-        <activity android:name=".activities.SignupActivity"
-            android:windowSoftInputMode="adjustNothing"/>
+        <activity
+            android:name=".activities.SignupActivity"
+            android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".activities.FlashBlinkActivity" />
         <activity android:name=".activities.ResetPasswordActivity" />
         <activity android:name=".activities.SendSmsActivity" />
@@ -56,8 +59,8 @@
         <activity
             android:name=".activities.LoginActivity"
             android:label="@string/app_name"
-            android:windowSoftInputMode="adjustNothing"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

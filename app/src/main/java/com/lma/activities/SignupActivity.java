@@ -11,13 +11,20 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.lma.R;
 import com.lma.info.Info;
 import com.lma.model.UserPojo;
 import com.lma.utils.DialogUtils;
 import com.lma.utils.Utils;
+
+import java.util.Objects;
 
 
 public class SignupActivity extends AppCompatActivity implements Info {
@@ -43,6 +50,7 @@ public class SignupActivity extends AppCompatActivity implements Info {
         initViews();
         dgLoading = new Dialog(this);
         DialogUtils.initLoadingDialog(dgLoading);
+
     }
 
 
@@ -117,6 +125,26 @@ public class SignupActivity extends AppCompatActivity implements Info {
                 "",
                 "");
 
+        dgLoading.show();
+        FirebaseApp firebaseApp = FirebaseApp.initializeApp(this);
+        if (firebaseApp == null) {
+            Log.i(TAG, "signUp: Firebase App = ");
+            return;
+        }
+        FirebaseAuth.getInstance(firebaseApp).createUserWithEmailAndPassword(strEtEmail, strEtPassword)
+                .addOnCompleteListener(task -> {
+                    dgLoading.dismiss();
+                    if (task.isSuccessful())
+                        initData();
+                    else {
+                        Log.i(TAG, "signUp: " + Objects.requireNonNull(task.getException()).getMessage());
+                        task.getException().printStackTrace();
+                    }
+                });
+
+    }
+
+    private void initData() {
         dgLoading.show();
         Utils.getReference()
                 .child(NODE_USERS)
