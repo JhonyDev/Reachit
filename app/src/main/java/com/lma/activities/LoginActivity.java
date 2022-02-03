@@ -21,6 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.lma.R;
 import com.lma.info.Info;
+import com.lma.model.UserPojo;
 import com.lma.utils.DialogUtils;
 import com.lma.utils.Utils;
 
@@ -54,11 +55,11 @@ public class LoginActivity extends AppCompatActivity implements Info {
 
         loadingDialog = new Dialog(this);
         DialogUtils.initLoadingDialog(loadingDialog);
-//
-//        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-//            loadingDialog.show();
-//            initUserData();
-//        }
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            loadingDialog.show();
+            initUserData();
+        }
 
     }
 
@@ -126,6 +127,7 @@ public class LoginActivity extends AppCompatActivity implements Info {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         loadingDialog.dismiss();
+                        Utils.currentUser = snapshot.getValue(UserPojo.class);
                         startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
                         finish();
                     }

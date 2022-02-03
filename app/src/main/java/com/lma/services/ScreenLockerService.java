@@ -105,42 +105,38 @@ public class ScreenLockerService extends Service implements PatternLockViewListe
 
             final int[] initX = new int[1];
             final int[] initY = new int[1];
-            imageView.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    int x = (int) event.getX();
-                    int y = (int) event.getY();
-                    Log.i("TAG", "X : " + x + " , " + "Y : " + y);
-                    if (i == 1) {
-                        switch (event.getAction()) {
-                            case MotionEvent.ACTION_DOWN:
-                                Log.i("TAG", "touched down");
-                                initX[0] = x;
-                                initY[0] = y;
-                                tvBottom.animate().alpha(0).setDuration(200);
-                                break;
-                            case MotionEvent.ACTION_MOVE:
-                                actionMove(x, y, initX, initY);
-                                Log.i("TAG", "moving: (" + (x - initX[0]) + ", " + (y - initY[0]) + ")");
-                                break;
-                            case MotionEvent.ACTION_UP:
-                                Log.i("TAG", "touched up");
-                                if ((x - initX[0]) > 500 || y - initY[0] > 500 || (x - initX[0]) < -500 || y - initY[0] < -500) {
-                                    //SHOW PATTERN
-                                    swipe();
-                                    digitalClock.animate().alpha(0).setDuration(200);
-                                    textView2.animate().alpha(0).setDuration(200);
-                                    tvDate.animate().alpha(0).setDuration(200);
+            imageView.setOnTouchListener((v, event) -> {
+                int x = (int) event.getX();
+                int y = (int) event.getY();
+                if (i == 1) {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            Log.i("TAG", "touched down");
+                            initX[0] = x;
+                            initY[0] = y;
+                            tvBottom.animate().alpha(0).setDuration(200);
+                            break;
+                        case MotionEvent.ACTION_MOVE:
+                            actionMove(x, y, initX, initY);
+                            Log.i("TAG", "moving: (" + (x - initX[0]) + ", " + (y - initY[0]) + ")");
+                            break;
+                        case MotionEvent.ACTION_UP:
+                            Log.i("TAG", "touched up");
+                            if ((x - initX[0]) > 500 || y - initY[0] > 500 || (x - initX[0]) < -500 || y - initY[0] < -500) {
+                                //SHOW PATTERN
+                                swipe();
+                                digitalClock.animate().alpha(0).setDuration(200);
+                                textView2.animate().alpha(0).setDuration(200);
+                                tvDate.animate().alpha(0).setDuration(200);
 
-                                    i++;
-                                } else {
-                                    doneAnimation();
-                                }
-                                break;
-                        }
+                                i++;
+                            } else {
+                                doneAnimation();
+                            }
+                            break;
                     }
-                    return true;
                 }
+                return true;
             });
             btnCancel.setOnClickListener(new View.OnClickListener() {
                 @Override
