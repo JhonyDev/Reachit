@@ -30,6 +30,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".activities.AddDeviceActivity"
+            android:exported="true" />
+        <activity
             android:name=".activities.DashboardActivity"
             android:exported="true" />
         <activity

@@ -24,7 +24,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.lma.R;
@@ -51,7 +50,6 @@ public class LockSettingsActivity extends AppCompatActivity {
     String imgpath, storedpath;
     SharedPreferences sp;
     ImageView imageView;
-    private InterstitialAd mInterstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,21 +126,8 @@ public class LockSettingsActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (mInterstitialAd.isLoaded()) {
-            mInterstitialAd.show();
-
-            mInterstitialAd.setAdListener(new AdListener() {
-                @Override
-                public void onAdClosed() {
-                    super.onAdClosed();
-                    finish();
-                }
-            });
-        } else {
-            super.onBackPressed();
-        }
-        //super.onBackPressed();
-        //startActivity(new Intent(LockSettingsActivity.this, MainActivity.class));
+        super.onBackPressed();
+        finish();
     }
 
     @Override
@@ -280,11 +265,5 @@ public class LockSettingsActivity extends AppCompatActivity {
 
     }
 
-    public void prepareAD() {
-        mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mInterstitialAd.loadAd(adRequest);
-    }
 }
 

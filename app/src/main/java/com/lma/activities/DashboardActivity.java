@@ -1,5 +1,6 @@
 package com.lma.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -19,6 +20,7 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     public void lockSettings(View view) {
+        startActivity(new Intent(DashboardActivity.this, LockSettingsActivity.class));
     }
 
     public void phoneRecovery(View view) {
