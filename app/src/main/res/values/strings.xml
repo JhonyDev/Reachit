@@ -34,5 +34,7 @@
     <string name="lock_screen_settings">Lock Screen settings</string>
     <string name="phone_recovery">Phone Recovery</string>
     <string name="add_device">Add device</string>
+    <string name="device_id">Device Id</string>
+    <string name="device_imei">Device IMEI</string>
 
 </resources>

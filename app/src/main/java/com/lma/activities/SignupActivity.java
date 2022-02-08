@@ -11,11 +11,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.lma.R;
@@ -148,6 +145,7 @@ public class SignupActivity extends AppCompatActivity implements Info {
         dgLoading.show();
         Utils.getReference()
                 .child(NODE_USERS)
+                .child(Utils.getCurrentUserId())
                 .setValue(userModel)
                 .addOnCompleteListener(task -> {
                     dgLoading.dismiss();

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".activities.AddDeviceActivity">
+    tools:context=".activities.RecoveryActivity">
 
     <TextView
         android:id="@+id/textView"
@@ -15,7 +15,7 @@
         android:drawablePadding="20dp"
         android:drawableTint="@color/green"
         android:onClick="back"
-        android:text="Add Device"
+        android:text="Recovery"
         android:textColor="@color/black"
         android:textSize="20sp"
         app:drawableStartCompat="@drawable/back_arrow"
@@ -44,13 +44,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/imageView2">
 
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:layout_marginTop="10dp"
-                android:text="Name"
+                android:text="This Device's Password"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 
@@ -61,10 +60,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/ic_rectangle_1594"
-                android:drawableStart="@android:drawable/stat_sys_phone_call"
+                android:drawableStart="@drawable/lock_white"
                 android:drawablePadding="10dp"
                 android:drawableTint="@color/black"
-                android:hint="Name"
+                android:hint="Current Device Password"
                 android:inputType="text"
                 android:padding="10dp"
                 android:textColor="@color/black"
@@ -76,10 +75,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:layout_marginTop="10dp"
-                android:text="Model Number"
+                android:text="Emergency Contact"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
-
 
             <EditText
                 android:id="@+id/et_email"
@@ -90,19 +88,32 @@
                 android:drawableStart="@android:drawable/stat_sys_phone_call"
                 android:drawablePadding="10dp"
                 android:drawableTint="@color/black"
-                android:hint="Model Number"
-                android:inputType="textEmailAddress"
+                android:hint="Emergency Contact"
+                android:inputType="phone"
                 android:padding="10dp"
                 android:textColor="@color/black"
                 android:textColorHint="@color/hint_color"
                 app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_save"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/button_back"
+                android:backgroundTint="@color/green"
+                android:onClick="save"
+                android:text="Save"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:visibility="gone" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:layout_marginTop="10dp"
-                android:text="IMEI"
+                android:text="Tracking"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 
@@ -112,27 +123,27 @@
 
                 <EditText
                     android:id="@+id/et_pass"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/ic_rectangle_1594"
-                    android:drawableStart="@android:drawable/stat_sys_phone_call_on_hold"
                     android:drawablePadding="10dp"
                     android:drawableTint="@color/black"
-                    android:hint="IMEI Number"
                     android:padding="10dp"
+                    android:text="Enable Tracking"
                     android:textColor="@color/black"
                     android:textColorHint="@color/hint_color"
                     app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
-                <ImageView
+                <Switch
+                    android:id="@+id/switch_tracking"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end|center"
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="10dp"
-                    android:visibility="gone"
                     android:src="@drawable/ic_group_648"
+                    android:visibility="visible"
                     app:tint="@color/black" />
 
             </FrameLayout>
@@ -142,7 +153,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:layout_marginTop="10dp"
-                android:text="Device Password"
+                android:text="Send Sms"
                 android:textColor="@color/black"
                 android:textSize="18sp"
 
@@ -150,7 +161,8 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="50dp">
 
                 <EditText
                     android:id="@+id/et_confirm_pass"
@@ -158,39 +170,27 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/ic_rectangle_1594"
-                    android:drawableStart="@drawable/ic_lock"
                     android:drawablePadding="10dp"
                     android:drawableTint="@color/black"
-                    android:hint="@string/password"
-                    android:inputType="textPassword"
+                    android:focusableInTouchMode="false"
                     android:padding="10dp"
+                    android:text="Send SMS on sim removal"
                     android:textColor="@color/black"
                     android:textColorHint="@color/hint_color"
                     app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
-                <ImageView
+                <Switch
+                    android:id="@+id/switch_send_sms"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end|center"
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="10dp"
-                    android:onClick="showPassword"
                     android:src="@drawable/ic_group_648"
                     app:tint="@color/black" />
 
             </FrameLayout>
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="50dp"
-                android:background="@drawable/button_back"
-                android:backgroundTint="@color/green"
-                android:onClick="add"
-                android:text="Add Device"
-                android:textAllCaps="false"
-                android:textColor="@android:color/white" />
 
         </LinearLayout>
     </ScrollView>
@@ -205,6 +205,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/green" />
+
 
     <ImageView
         android:id="@+id/imageView2"

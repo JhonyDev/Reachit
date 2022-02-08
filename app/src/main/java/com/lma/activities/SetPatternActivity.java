@@ -18,7 +18,6 @@ import com.andrognito.patternlockview.listener.PatternLockViewListener;
 import com.andrognito.patternlockview.utils.PatternLockUtils;
 import com.lma.R;
 import com.lma.services.LockScreenManager;
-import com.lma.temp.MainScreen;
 
 import java.util.List;
 
@@ -52,21 +51,18 @@ public class SetPatternActivity extends AppCompatActivity implements PatternLock
         if (LockScreenManager.pattern == null) {
             textView.setText("Draw New Pattern");
         }
-        button_Reset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                temp = null;
-                textView.setText("Draw New Pattern");
-                patternLockView.clearPattern();
-                patternLockView.setEnabled(true);
-            }
+        button_Reset.setOnClickListener(v -> {
+            temp = null;
+            textView.setText("Draw New Pattern");
+            patternLockView.clearPattern();
+            patternLockView.setEnabled(true);
         });
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        startActivity(new Intent(this, MainScreen.class));
+        startActivity(new Intent(this, LockSettingsActivity.class));
         finish();
     }
 
@@ -145,7 +141,7 @@ public class SetPatternActivity extends AppCompatActivity implements PatternLock
                 public void onClick(View v) {
                     LockScreenManager.pattern = ptrn;
                     patternLockView.setEnabled(true);
-                    Intent intent = new Intent(SetPatternActivity.this, MainScreen.class);
+                    Intent intent = new Intent(SetPatternActivity.this, LockSettingsActivity.class);
                     startActivity(intent);
                     Toast.makeText(SetPatternActivity.this, "Pattern Updated", Toast.LENGTH_SHORT).show();
                     finish();

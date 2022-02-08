@@ -17,12 +17,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.lma.R;
 import com.lma.info.Info;
-import com.lma.model.UserPojo;
+import com.lma.model.Device;
 import com.lma.utils.DialogUtils;
+import com.lma.utils.SharedPrefUtils;
 import com.lma.utils.Utils;
 
 import java.util.Objects;
@@ -38,6 +38,8 @@ public class LoginActivity extends AppCompatActivity implements Info {
     public static Activity context;
     EditText etEmail;
     EditText etPassword;
+    EditText etDeviceId;
+    String strEtDeviceId;
     String strEtEmail;
     String strEtPassword;
     boolean isPassVisible = false;
@@ -52,13 +54,14 @@ public class LoginActivity extends AppCompatActivity implements Info {
 
         etEmail = findViewById(R.id.et_email);
         etPassword = findViewById(R.id.et_pass);
+        etDeviceId = findViewById(R.id.et_device_id);
 
         loadingDialog = new Dialog(this);
         DialogUtils.initLoadingDialog(loadingDialog);
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            loadingDialog.show();
-            initUserData();
+            startActivity(new Intent(this, DashboardActivity.class));
+            finish();
         }
 
     }
@@ -85,11 +88,13 @@ public class LoginActivity extends AppCompatActivity implements Info {
     private void castStrings() {
         strEtEmail = etEmail.getText().toString();
         strEtPassword = etPassword.getText().toString();
+        strEtDeviceId = etDeviceId.getText().toString();
     }
 
     private boolean isEverythingValid() {
         if (!Utils.validEt(etEmail, strEtEmail))
             return false;
+
         return Utils.validEt(etPassword, strEtPassword);
     }
 
@@ -106,8 +111,10 @@ public class LoginActivity extends AppCompatActivity implements Info {
                 .addOnCompleteListener(task -> {
                     loadingDialog.dismiss();
                     if (task.isSuccessful()) {
-                        initUserData();
-                    } else {
+                        startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
+                        finish();
+                    }
+                    else {
                         Objects.requireNonNull(task.getException()).printStackTrace();
                         try {
                             Toast.makeText(LoginActivity.this,
@@ -119,23 +126,4 @@ public class LoginActivity extends AppCompatActivity implements Info {
                 });
     }
 
-    private void initUserData() {
-        FirebaseDatabase.getInstance().getReference()
-                .child(NODE_USERS)
-                .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        loadingDialog.dismiss();
-                        Utils.currentUser = snapshot.getValue(UserPojo.class);
-                        startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
-                        finish();
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-    }
 }
