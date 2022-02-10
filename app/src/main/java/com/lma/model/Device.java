@@ -1,21 +1,21 @@
 package com.lma.model;
 
-public class Device {
+public class Device extends Super {
     String id;
     String name;
     String modelNumber;
     String IMEI;
-    String password;
+    String phone;
 
     public Device() {
     }
 
-    public Device(String id, String name, String modelNumber, String IMEI, String password) {
+    public Device(String id, String name, String modelNumber, String IMEI, String phone) {
         this.id = id;
         this.name = name;
         this.modelNumber = modelNumber;
         this.IMEI = IMEI;
-        this.password = password;
+        this.phone = phone;
     }
 
     public String getName() {
@@ -50,11 +50,11 @@ public class Device {
         this.id = id;
     }
 
-    public String getPassword() {
-        return password;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

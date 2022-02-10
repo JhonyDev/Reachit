@@ -2,8 +2,6 @@ package com.lma.activities;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.text.method.HideReturnsTransformationMethod;
-import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -20,16 +18,16 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class AddDeviceActivity extends AppCompatActivity implements Info {
-    boolean isPassVisible = false;
-    EditText etPassword;
     Dialog dgLoading;
     EditText etName;
     EditText etModelNumber;
     EditText etIMEI;
+    EditText etPhone;
+
+    String strEtPhone;
     String strEtName;
     String strEtModelNumber;
     String strEtIMEI;
-    String strEtPassword;
 
 
     @Override
@@ -49,7 +47,7 @@ public class AddDeviceActivity extends AppCompatActivity implements Info {
         etName = findViewById(R.id.et_user_name);
         etModelNumber = findViewById(R.id.et_email);
         etIMEI = findViewById(R.id.et_pass);
-        etPassword = findViewById(R.id.et_confirm_pass);
+        etPhone = findViewById(R.id.et_phone);
 
     }
 
@@ -57,18 +55,8 @@ public class AddDeviceActivity extends AppCompatActivity implements Info {
     private void castStrings() {
         strEtIMEI = etIMEI.getText().toString();
         strEtName = etName.getText().toString();
-        strEtPassword = etPassword.getText().toString();
         strEtModelNumber = etModelNumber.getText().toString();
-    }
-
-    public void showPassword(View view) {
-        if (!isPassVisible) {
-            etPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-            isPassVisible = true;
-        } else {
-            etPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
-            isPassVisible = false;
-        }
+        strEtPhone = etPhone.getText().toString();
     }
 
     public void add(View view) {
@@ -79,14 +67,14 @@ public class AddDeviceActivity extends AppCompatActivity implements Info {
             return;
         if (!Utils.validEt(etIMEI, strEtIMEI))
             return;
-        if (!Utils.validEt(etPassword, strEtPassword))
+        if (!Utils.validEt(etPhone, strEtPhone))
             return;
         initData();
     }
 
     private void initData() {
         String id = UUID.randomUUID().toString();
-        Device device = new Device(id, strEtName, strEtModelNumber, strEtIMEI, strEtPassword);
+        Device device = new Device(id, strEtName, strEtModelNumber, strEtIMEI, strEtPhone);
         Utils.getReference().child(NODE_DEVICES)
                 .child(Utils.getCurrentUserId())
                 .child(strEtIMEI)

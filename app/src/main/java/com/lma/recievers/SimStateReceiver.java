@@ -1,6 +1,5 @@
 package com.lma.recievers;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,15 +10,14 @@ import com.lma.utils.SharedPrefUtils;
 
 public class SimStateReceiver extends BroadcastReceiver implements Info {
 
-    private static final String SIM_STATE_RECEIVED = "android.provider.Telephony.SIM_STATE_CHANGED";
-
     @Override
     public void onReceive(Context context, Intent intent) {
-        sendMessage(context);
+        if (SharedPrefUtils.getBooleanSharedPrefs(context, KEY_SEND_SMS))
+            sendMessage(context);
     }
 
     private void sendMessage(Context context) {
-        String phoneNo = SharedPrefUtils.getStringSharedPrefs((Activity) context, KEY_EMERGENCY_CONTACT);
+        String phoneNo = SharedPrefUtils.getStringSharedPrefs(context, KEY_EMERGENCY_CONTACT);
         SmsManager smsManager = SmsManager.getDefault();
         smsManager.sendTextMessage(phoneNo, null, "ALERT : SIM STATE CHANGED", null, null);
     }

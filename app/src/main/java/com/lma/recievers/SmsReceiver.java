@@ -27,10 +27,8 @@ public class SmsReceiver extends BroadcastReceiver {
 
     MediaPlayer mediaPlayer;
 
-
     @Override
     public void onReceive(Context context, Intent intent) {
-        // TODO: This method is called when the BroadcastReceiver is receiving
         Log.i("TAG", "msg Received");
         mediaPlayer = MediaPlayer.create(context, R.raw.all_might_i_am_here);
         if (intent.getAction().equals(SMS_RECEIVED)) {

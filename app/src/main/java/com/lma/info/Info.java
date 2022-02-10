@@ -11,4 +11,8 @@ public interface Info {
     String KEY_TRACKING = "TrackingCheck";
     String KEY_SEND_SMS = "SMSCheck";
     String KEY_CURRENT_DEVICE_IMEI = "kjljlkjh";
+
+
+//    RecyclerView Adapter types
+    int RV_TYPE_DEVICES = 1;
 }

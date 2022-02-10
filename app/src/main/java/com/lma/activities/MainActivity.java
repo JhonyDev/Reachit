@@ -1,4 +1,4 @@
-package com.lma;
+package com.lma.activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -26,18 +26,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.RequestConfiguration;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.lma.R;
 import com.lma.services.LockScreenManager;
 import com.lma.ui.main.SectionsPagerAdapter;
 import com.lma.viewpager.VerticalViewPager;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     public final static int REQUEST_CODE = 10101;
@@ -65,26 +57,12 @@ public class MainActivity extends AppCompatActivity {
     DisplayMetrics metrics;
     float factor;
     float factor2;
-    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        List<String> testDeviceIds = Arrays.asList("33BE2250B43518CCDA7DE426D04EE231");
-        RequestConfiguration configuration =
-                new RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build();
-        MobileAds.setRequestConfiguration(configuration);
 
-        MobileAds.initialize(this, new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
-            }
-        });
-
-        mAdView = findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
 
         metrics = getResources().getDisplayMetrics();
 
@@ -93,12 +71,7 @@ public class MainActivity extends AppCompatActivity {
         tvArrows = findViewById(R.id.tv_shimmer);
         tvGetStarted = findViewById(R.id.tv_get_started);
         tvContactUs = findViewById(R.id.tv_contact_us);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                animateArrows();
-            }
-        }, 1000);
+        new Handler().postDelayed(this::animateArrows, 1000);
         tvDescription = findViewById(R.id.tv_description);
         tvReachIt = findViewById(R.id.tv_reach_it);
         factor = (float) 1 / metrics.widthPixels;

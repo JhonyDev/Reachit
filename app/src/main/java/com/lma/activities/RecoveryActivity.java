@@ -26,15 +26,15 @@ import com.lma.utils.Utils;
 public class RecoveryActivity extends AppCompatActivity implements Info, TextWatcher {
 
     Button btnSave;
-    EditText etDevicePassword;
+    EditText etDeviceIMEI;
     EditText etEmergencyContact;
-    String strEtDevicePassword;
+    String strEtDeviceIMEI;
     String strEtEmergencyContact;
     Switch switchTracking;
     Switch switchSendSMS;
 
     String currentEmergency;
-    String currentPassword;
+    String currentIMEI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,14 +49,13 @@ public class RecoveryActivity extends AppCompatActivity implements Info, TextWat
     }
 
     private void initTextWatchers() {
-        etDevicePassword.addTextChangedListener(this);
+        etDeviceIMEI.addTextChangedListener(this);
         etEmergencyContact.addTextChangedListener(this);
     }
 
     private void initSwitches() {
         switchSendSMS.setOnCheckedChangeListener((compoundButton, b) -> {
             SharedPrefUtils.putBooleanSharedPrefs(RecoveryActivity.this, b, KEY_SEND_SMS);
-            // TODO: SEND SMS ON SIM REMOVAL
         });
         switchTracking.setOnCheckedChangeListener((compoundButton, b) -> {
             SharedPrefUtils.putBooleanSharedPrefs(RecoveryActivity.this, b, KEY_TRACKING);
@@ -104,12 +103,12 @@ public class RecoveryActivity extends AppCompatActivity implements Info, TextWat
 
     private void initUserData() {
         currentEmergency = SharedPrefUtils.getStringSharedPrefs(this, KEY_EMERGENCY_CONTACT);
-        currentPassword = SharedPrefUtils.getStringSharedPrefs(this, KEY_DEVICE_PASSWORD);
+        currentIMEI = SharedPrefUtils.getStringSharedPrefs(this, KEY_CURRENT_DEVICE_IMEI);
 
         switchTracking.setChecked(SharedPrefUtils.getBooleanSharedPrefs(this, KEY_TRACKING));
         switchSendSMS.setChecked(SharedPrefUtils.getBooleanSharedPrefs(this, KEY_SEND_SMS));
 
-        etDevicePassword.setText(currentPassword);
+        etDeviceIMEI.setText(currentIMEI);
         etEmergencyContact.setText(currentEmergency);
 
 
@@ -117,7 +116,7 @@ public class RecoveryActivity extends AppCompatActivity implements Info, TextWat
 
     private void initViews() {
         btnSave = findViewById(R.id.btn_save);
-        etDevicePassword = findViewById(R.id.et_user_name);
+        etDeviceIMEI = findViewById(R.id.et_imei);
         etEmergencyContact = findViewById(R.id.et_email);
         switchTracking = findViewById(R.id.switch_tracking);
         switchSendSMS = findViewById(R.id.switch_send_sms);
@@ -130,13 +129,13 @@ public class RecoveryActivity extends AppCompatActivity implements Info, TextWat
     public void save(View view) {
         Log.i(TAG, "save: ");
         castStrings();
-        if (!Utils.validEt(etDevicePassword, strEtDevicePassword))
+        if (!Utils.validEt(etDeviceIMEI, strEtDeviceIMEI))
             return;
         if (!Utils.validEt(etEmergencyContact, strEtEmergencyContact))
             return;
 
         try {
-            Utils.currentDevice.setPassword(strEtDevicePassword);
+            Utils.currentDevice.setPhone(strEtDeviceIMEI);
             Utils.getReference().child(NODE_DEVICES).child(Utils.getCurrentUserId())
                     .child(Utils.currentDevice.getIMEI())
                     .setValue(Utils.currentDevice).addOnCompleteListener(task -> {
@@ -147,11 +146,11 @@ public class RecoveryActivity extends AppCompatActivity implements Info, TextWat
             e.printStackTrace();
         }
         SharedPrefUtils.putStringSharedPrefs(this, strEtEmergencyContact, KEY_EMERGENCY_CONTACT);
-        SharedPrefUtils.putStringSharedPrefs(this, strEtDevicePassword, KEY_DEVICE_PASSWORD);
+        SharedPrefUtils.putStringSharedPrefs(this, strEtDeviceIMEI, KEY_DEVICE_PASSWORD);
     }
 
     private void castStrings() {
-        strEtDevicePassword = etDevicePassword.getText().toString();
+        strEtDeviceIMEI = etDeviceIMEI.getText().toString();
         strEtEmergencyContact = etEmergencyContact.getText().toString();
     }
 
@@ -164,7 +163,7 @@ public class RecoveryActivity extends AppCompatActivity implements Info, TextWat
     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
         castStrings();
         if (!strEtEmergencyContact.equals(currentEmergency)
-                | !strEtDevicePassword.equals(currentPassword))
+                | !strEtDeviceIMEI.equals(currentIMEI))
             btnSave.setVisibility(View.VISIBLE);
         else
             btnSave.setVisibility(View.GONE);

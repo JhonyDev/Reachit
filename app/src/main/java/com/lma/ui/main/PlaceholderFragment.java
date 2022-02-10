@@ -27,7 +27,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.lma.MainActivity;
+import com.lma.activities.MainActivity;
 import com.lma.R;
 import com.lma.activities.LockSettingsActivity;
 import com.lma.activities.SMSRemoteSettings;

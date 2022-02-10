@@ -1,6 +1,7 @@
 package com.lma.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 
 
@@ -32,12 +33,12 @@ public class SharedPrefUtils {
         return mPrefs.getInt(key, 0);
     }
 
-    public static String getStringSharedPrefs(Activity context, String key) {
+    public static String getStringSharedPrefs(Context context, String key) {
         SharedPreferences mPrefs = context.getSharedPreferences("SharedPrefs", 0);
         return mPrefs.getString(key, "");
     }
 
-    public static boolean getBooleanSharedPrefs(Activity context, String key) {
+    public static boolean getBooleanSharedPrefs(Context context, String key) {
         SharedPreferences mPrefs = context.getSharedPreferences("SharedPrefs", 0);
         return mPrefs.getBoolean(key, false);
     }

@@ -49,13 +49,13 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:layout_marginTop="10dp"
-                android:text="This Device's Password"
+                android:text="This Device's IMEI"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 
 
             <EditText
-                android:id="@+id/et_user_name"
+                android:id="@+id/et_imei"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -63,7 +63,7 @@
                 android:drawableStart="@drawable/lock_white"
                 android:drawablePadding="10dp"
                 android:drawableTint="@color/black"
-                android:hint="Current Device Password"
+                android:hint="Current Device IMEI"
                 android:inputType="text"
                 android:padding="10dp"
                 android:textColor="@color/black"

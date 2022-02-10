@@ -19,7 +19,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
-import com.lma.MainActivity;
+import com.lma.activities.MainActivity;
 import com.lma.R;
 import com.lma.activities.LockSettingsActivity;
 import com.lma.recievers.ScreenStateReceiver;

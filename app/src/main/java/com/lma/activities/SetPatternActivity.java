@@ -62,7 +62,6 @@ public class SetPatternActivity extends AppCompatActivity implements PatternLock
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        startActivity(new Intent(this, LockSettingsActivity.class));
         finish();
     }
 
@@ -136,16 +135,11 @@ public class SetPatternActivity extends AppCompatActivity implements PatternLock
             patternLockView.setEnabled(false);
             textView.setText("Pattern Matched");
             button.setText("Confirm");
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    LockScreenManager.pattern = ptrn;
-                    patternLockView.setEnabled(true);
-                    Intent intent = new Intent(SetPatternActivity.this, LockSettingsActivity.class);
-                    startActivity(intent);
-                    Toast.makeText(SetPatternActivity.this, "Pattern Updated", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
+            button.setOnClickListener(v -> {
+                LockScreenManager.pattern = ptrn;
+                patternLockView.setEnabled(true);
+                Toast.makeText(SetPatternActivity.this, "Pattern Updated", Toast.LENGTH_SHORT).show();
+                finish();
             });
 
         } else {
