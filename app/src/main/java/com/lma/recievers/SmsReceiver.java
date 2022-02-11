@@ -6,16 +6,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.telephony.SmsMessage;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.lma.R;
-import com.lma.services.GPSTracker;
+import com.lma.info.Info;
 import com.lma.services.LockScreenManager;
+import com.lma.utils.SharedPrefUtils;
 
-public class SmsReceiver extends BroadcastReceiver {
+public class SmsReceiver extends BroadcastReceiver implements Info {
 
     private static final String SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
 
@@ -30,6 +33,7 @@ public class SmsReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.i("TAG", "msg Received");
+
         mediaPlayer = MediaPlayer.create(context, R.raw.all_might_i_am_here);
         if (intent.getAction().equals(SMS_RECEIVED)) {
             Bundle dataBundle = intent.getExtras();
@@ -45,51 +49,75 @@ public class SmsReceiver extends BroadcastReceiver {
 
                 String command = msg.toLowerCase();
                 Toast.makeText(context, command, Toast.LENGTH_SHORT).show();
-                if (command.equals(start) && LockScreenManager.screamOn) {
+                Log.i(TAG, "onReceive: " + SharedPrefUtils.getStringSharedPrefs(context, KEY_CURRENT_DEVICE_IMEI));
+                if (command.contains(COMMAND_RING) & command.contains(SharedPrefUtils.getStringSharedPrefs(context, KEY_CURRENT_DEVICE_IMEI))) {
                     Toast.makeText(context, "Starting", Toast.LENGTH_SHORT).show();
-                    mediaPlayer.setLooping(true);
-                    AudioManager mgr = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-                    int values = 15;
-                    if (mgr != null) {
-                        mgr.setStreamVolume(AudioManager.STREAM_MUSIC, values, 0);
-                    }
-                    mediaPlayer.start();
-                }
-                if (command.equals(stop) && LockScreenManager.screamOn) {
-                    Toast.makeText(context, "Stopping", Toast.LENGTH_SHORT).show();
-                    AudioManager mgr = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-                    int values = 0;
-                    if (mgr != null) {
-                        mgr.setStreamVolume(AudioManager.STREAM_MUSIC, values, 0);
-                    }
                     mediaPlayer.setLooping(false);
-                    mediaPlayer.stop();
-                    mediaPlayer.release();
-                    mediaPlayer = null;
+                    mediaPlayer.start();
+                    for (int i = 0; i < 20; i++) {
+                        AudioManager mgr = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+                        if (mgr != null)
+                            mgr.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_RAISE,
+                                    AudioManager.FLAG_SHOW_UI);
+
+                    }
+                    final int[] count = {0};
+                    mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        final int maxCount = 3;
+                        @Override
+                        public void onCompletion(MediaPlayer mediaPlayer) {
+                            if (count[0] < maxCount) {
+                                count[0]++;
+                                mediaPlayer.seekTo(0);
+                                mediaPlayer.start();
+                            }
+                        }
+                    });
+                }
+                if (command.contains(LOCATION_KEYWORD)) {
+                    String[] str = command.split(",");
+                    String lat = str[1];
+                    String lng = str[2];
+                    Log.i(TAG, "onReceive: LAT = " + lat);
+                    Log.i(TAG, "onReceive: LNG = " + lng);
+                    String strUri = "http://maps.google.com/maps?q=loc:" + lat + "," + lng + " (" + "Label which you want" + ")";
+                    Intent intent2 = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(strUri));
+
+                    intent2.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+                    intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                    context.startActivity(intent2);
                 }
 
-                if (command.equals(location) && LockScreenManager.locationOn) {
-                    GPSTracker gps = new GPSTracker(context);
-                    if (gps.canGetLocation()) {
-                        Intent intent1 = new Intent();
-                        intent1.setComponent(new ComponentName("com.reachit", "com.reachit.activities.SendSmsActivity"));
-                        intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent1.putExtra("phn", phoneNo);
-                        context.startActivity(intent1);
-                    } else {
-                        // can't get location
-                        Log.i("long", "///////Cant get location");
-                        // GPS or Network is not enabled
-                        // Ask user to enable GPS/network in settings
-                        gps.showSettingsAlert();
-                    }
+
+                if (command.contains(COMMAND_MAP)
+                        & command.contains(SharedPrefUtils.getStringSharedPrefs(context, KEY_CURRENT_DEVICE_IMEI))) {
+                    Toast.makeText(context, "SENDING LOCATION", Toast.LENGTH_SHORT).show();
+
+                    Intent intent1 = new Intent(Intent.ACTION_CALL);
+                    intent1.setData(Uri.parse("tel:" + "032215"));
+                    intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent1);
+
+                    new Handler().postDelayed(() -> {
+                        Intent launchIntent = new Intent();
+                        launchIntent.setComponent(new ComponentName
+                                ("com.lma", "com.lma.activities.SendSmsActivity"));
+                        launchIntent.putExtra("phoneNo", phoneNo);
+                        launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(launchIntent);
+                    }, 2000);
+
                 }
-                if (command.equals(blinkFlash) && LockScreenManager.flashOn){
-                    Intent intent1 = new Intent();
-                    intent1.setComponent(new ComponentName("com.reachit", "com.reachit.activities.FlashBlinkActivity"));
-                    intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                if (command.contains(COMMAND_CALL)
+                        & command.contains(SharedPrefUtils.getStringSharedPrefs(context, KEY_CURRENT_DEVICE_IMEI))) {
+                    Toast.makeText(context, "Making Call", Toast.LENGTH_SHORT).show();
+                    Intent intent1 = new Intent(Intent.ACTION_CALL);
+                    intent1.setData(Uri.parse("tel:" + phoneNo));
+                    intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent1);
                 }
+
             }
         }
     }

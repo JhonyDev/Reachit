@@ -1,10 +1,18 @@
 package com.lma.adapter;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.telephony.SmsManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lma.R;
@@ -42,28 +50,59 @@ public class TypeRecyclerViewAdapter extends RecyclerView.Adapter<TypeRecyclerVi
         Device device = (Device) listInstances.get(position);
         holder.tvName.setText(device.getName());
         holder.tvIMEI.setText(device.getIMEI());
+        holder.tvPhone.setText(device.getPhone());
         holder.tvModelNumber.setText(device.getModelNumber());
-        holder.btnMap.setOnClickListener(view -> btnMap());
-        holder.btnRing.setOnClickListener(view -> btnRing());
-        holder.btnReqCall.setOnClickListener(view -> btnReqCall());
+
+        holder.btnMap.setOnClickListener(view -> btnMap(device));
+        holder.btnRing.setOnClickListener(view -> btnRing(device));
+        holder.btnReqCall.setOnClickListener(view -> btnReqCall(device));
     }
 
-    private void btnReqCall() {
-//        TODO: REQUEST A CALL FROM END DEVICE\
-        /**
-         * SEND MESSAGE TO THE DEVICE
-         *
-         * */
+    private void btnReqCall(Device device) {
+//         REQUEST A CALL FROM END DEVICE
+        sendMessage(device.getPhone(), device.getIMEI(), COMMAND_CALL);
 
     }
 
-    private void btnRing() {
+    private void sendMessage(String phoneNo, String imei, String command) {
+        if (!checkSMSPermission())
+            return;
+
+        SmsManager smsManager = SmsManager.getDefault();
+        smsManager.sendTextMessage(phoneNo, null, imei + " " + command, null, null);
+        Toast.makeText(context, "SMS sent.",
+                Toast.LENGTH_LONG).show();
+    }
+
+    private boolean checkSMSPermission() {
+        if (ContextCompat.checkSelfPermission(context,
+                Manifest.permission.SEND_SMS)
+                != PackageManager.PERMISSION_GRANTED) {
+            Log.i("asd", "Check self permission");
+            if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context,
+                    Manifest.permission.SEND_SMS)) {
+                Log.i("asd", "should show permission dialog");
+            } else {
+                ActivityCompat.requestPermissions((Activity) context,
+                        new String[]{Manifest.permission.SEND_SMS},
+                        11);
+            }
+            return false;
+        } else {
+            Log.i("long", "///////Permission granted");
+            return true;
+        }
+    }
+
+    private void btnRing(Device device) {
 //        TODO: RING THE DEVICE
+        sendMessage(device.getPhone(), device.getIMEI(), COMMAND_RING);
 
     }
 
-    private void btnMap() {
+    private void btnMap(Device device) {
 //        TODO: GET LOCATION AND DISPLAY IT ON THE MAP
+        sendMessage(device.getPhone(), device.getIMEI(), COMMAND_MAP);
 
     }
 

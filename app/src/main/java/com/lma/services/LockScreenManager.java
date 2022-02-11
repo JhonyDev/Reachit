@@ -1,6 +1,6 @@
 package com.lma.services;
 
-import static com.lma.application.App.CHANNEL_ID;
+import static com.lma.App.CHANNEL_ID;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -8,6 +8,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -19,51 +20,54 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
-import com.lma.activities.MainActivity;
 import com.lma.R;
 import com.lma.activities.LockSettingsActivity;
+import com.lma.activities.MainActivity;
+import com.lma.info.Info;
 import com.lma.recievers.ScreenStateReceiver;
 
 import java.util.Timer;
 
-public class LockScreenManager extends Service {
+public class LockScreenManager extends Service implements Info {
     public static final String SHARED_PREFS = "sharedPrefs";
     public static final String TEXT2 = "text2";
     public static final String IMAGE_URI = "imagePath";
 
     public static String pattern;
-    String previousKey;
-    String prevImageURI;
-
     public static Timer timer;
     public static boolean timerRunning = false;
     public static boolean screenOn = true;
     public static String activationKey;
     public static boolean screamOn = false;
     public static boolean flashOn = false;
-
     public static boolean locationOn = false;
     public static Drawable imagBack;
-
     public static String imageURI;
-
+    String previousKey;
+    String prevImageURI;
     BroadcastReceiver mScreenStateReceiver;
+    Context context;
+
 
     public LockScreenManager() {
 
     }
 
+    public void initLocationSequence() {
+
+    }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
+        context = this;
         loadData();
 
-        if (LockSettingsActivity.imageURI != null){
+        if (LockSettingsActivity.imageURI != null) {
             LockScreenManager.imageURI = LockSettingsActivity.imageURI;
             LockScreenManager.imagBack = LockSettingsActivity.drawable;
         }
 
-        if (previousKey != null){
+        if (previousKey != null) {
             LockScreenManager.activationKey = previousKey;
         }
 
@@ -93,7 +97,7 @@ public class LockScreenManager extends Service {
     }
 
     private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel serviceChannel = new NotificationChannel(
                     CHANNEL_ID,
                     "Example Service Channel",

@@ -16,6 +16,7 @@ public class TypeRecyclerViewHolder extends RecyclerView.ViewHolder {
     TextView tvName;
     TextView tvIMEI;
     TextView tvModelNumber;
+    TextView tvPhone;
 
     AppCompatButton btnRing;
     AppCompatButton btnMap;
@@ -27,6 +28,7 @@ public class TypeRecyclerViewHolder extends RecyclerView.ViewHolder {
         tvName = itemView.findViewById(R.id.tv_device_name);
         tvIMEI = itemView.findViewById(R.id.tv_imei);
         tvModelNumber = itemView.findViewById(R.id.tv_model_number);
+        tvPhone = itemView.findViewById(R.id.tv_phone);
 
         btnRing = itemView.findViewById(R.id.btn_ring);
         btnMap = itemView.findViewById(R.id.btn_map);

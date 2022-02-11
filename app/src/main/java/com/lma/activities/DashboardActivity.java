@@ -1,7 +1,9 @@
 package com.lma.activities;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,6 +15,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -42,6 +46,8 @@ public class DashboardActivity extends AppCompatActivity implements Info {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
+        initPermissions();
+
         initViews();
 
         loadingDialog = new Dialog(this);
@@ -58,6 +64,46 @@ public class DashboardActivity extends AppCompatActivity implements Info {
         initUserData();
         initTextWatchers();
 
+
+    }
+
+    private void initPermissions() {
+        if (initPermission(Manifest.permission.SEND_SMS, 1))
+            if (initPermission(Manifest.permission.ACCESS_COARSE_LOCATION, 2))
+                if (initPermission(Manifest.permission.ACCESS_FINE_LOCATION, 3))
+                    if (initPermission(Manifest.permission.CALL_PHONE, 4))
+                        Toast.makeText(this, "Permissions Granted", Toast.LENGTH_SHORT).show();
+    }
+
+
+    private boolean initPermission(String perm, int code) {
+        if (ContextCompat.checkSelfPermission(this,
+                perm)
+                != PackageManager.PERMISSION_GRANTED) {
+            Log.i("asd", "Check self permission");
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    perm)) {
+                Log.i("asd", "should show permission dialog");
+                ActivityCompat.requestPermissions(this,
+                        new String[]{perm},
+                        code);
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{perm},
+                        code);
+            }
+            return false;
+        } else {
+            Log.i("long", "///////Permission granted");
+            return true;
+        }
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        initPermissions();
 
     }
 

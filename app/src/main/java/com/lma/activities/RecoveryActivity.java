@@ -28,8 +28,16 @@ public class RecoveryActivity extends AppCompatActivity implements Info, TextWat
     Button btnSave;
     EditText etDeviceIMEI;
     EditText etEmergencyContact;
+    EditText etDeviceName;
+    EditText etModelNumber;
+    EditText etPhone;
+
+    String strEtPhone;
+    String strEtDeviceName;
+    String strEtModelNumber;
     String strEtDeviceIMEI;
     String strEtEmergencyContact;
+
     Switch switchTracking;
     Switch switchSendSMS;
 
@@ -41,6 +49,7 @@ public class RecoveryActivity extends AppCompatActivity implements Info, TextWat
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recovery);
 
+
         initViews();
         initUserData();
         initSwitches();
@@ -51,6 +60,9 @@ public class RecoveryActivity extends AppCompatActivity implements Info, TextWat
     private void initTextWatchers() {
         etDeviceIMEI.addTextChangedListener(this);
         etEmergencyContact.addTextChangedListener(this);
+        etDeviceName.addTextChangedListener(this);
+        etModelNumber.addTextChangedListener(this);
+        etPhone.addTextChangedListener(this);
     }
 
     private void initSwitches() {
@@ -95,8 +107,10 @@ public class RecoveryActivity extends AppCompatActivity implements Info, TextWat
                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                     PackageManager.DONT_KILL_APP);
             Toast.makeText(this, "Broadcast receiver Enabled", Toast.LENGTH_SHORT).show();
+            switchTracking.setChecked(true);
         } else {
             Toast.makeText(this, "Enable Lock Screen First", Toast.LENGTH_SHORT).show();
+            switchTracking.setChecked(false);
         }
 
     }
@@ -111,12 +125,17 @@ public class RecoveryActivity extends AppCompatActivity implements Info, TextWat
         etDeviceIMEI.setText(currentIMEI);
         etEmergencyContact.setText(currentEmergency);
 
-
+        etDeviceName.setText(Utils.currentDevice.getName());
+        etModelNumber.setText(Utils.currentDevice.getModelNumber());
+        etPhone.setText(Utils.currentDevice.getPhone());
     }
 
     private void initViews() {
         btnSave = findViewById(R.id.btn_save);
         etDeviceIMEI = findViewById(R.id.et_imei);
+        etDeviceName = findViewById(R.id.et_name);
+        etModelNumber = findViewById(R.id.et_model);
+        etPhone = findViewById(R.id.et_phone);
         etEmergencyContact = findViewById(R.id.et_email);
         switchTracking = findViewById(R.id.switch_tracking);
         switchSendSMS = findViewById(R.id.switch_send_sms);
@@ -133,9 +152,18 @@ public class RecoveryActivity extends AppCompatActivity implements Info, TextWat
             return;
         if (!Utils.validEt(etEmergencyContact, strEtEmergencyContact))
             return;
+        if (!Utils.validEt(etDeviceName, strEtDeviceName))
+            return;
+        if (!Utils.validEt(etModelNumber, strEtModelNumber))
+            return;
+        if (!Utils.validEt(etPhone, strEtPhone))
+            return;
 
         try {
-            Utils.currentDevice.setPhone(strEtDeviceIMEI);
+            Utils.currentDevice.setIMEI(strEtDeviceIMEI);
+            Utils.currentDevice.setPhone(strEtPhone);
+            Utils.currentDevice.setModelNumber(strEtModelNumber);
+            Utils.currentDevice.setName(strEtDeviceName);
             Utils.getReference().child(NODE_DEVICES).child(Utils.getCurrentUserId())
                     .child(Utils.currentDevice.getIMEI())
                     .setValue(Utils.currentDevice).addOnCompleteListener(task -> {
@@ -146,12 +174,15 @@ public class RecoveryActivity extends AppCompatActivity implements Info, TextWat
             e.printStackTrace();
         }
         SharedPrefUtils.putStringSharedPrefs(this, strEtEmergencyContact, KEY_EMERGENCY_CONTACT);
-        SharedPrefUtils.putStringSharedPrefs(this, strEtDeviceIMEI, KEY_DEVICE_PASSWORD);
+        SharedPrefUtils.putStringSharedPrefs(this, strEtDeviceIMEI, KEY_CURRENT_DEVICE_IMEI);
     }
 
     private void castStrings() {
         strEtDeviceIMEI = etDeviceIMEI.getText().toString();
         strEtEmergencyContact = etEmergencyContact.getText().toString();
+        strEtDeviceName = etDeviceName.getText().toString();
+        strEtModelNumber = etModelNumber.getText().toString();
+        strEtPhone = etPhone.getText().toString();
     }
 
     @Override
@@ -163,7 +194,11 @@ public class RecoveryActivity extends AppCompatActivity implements Info, TextWat
     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
         castStrings();
         if (!strEtEmergencyContact.equals(currentEmergency)
-                | !strEtDeviceIMEI.equals(currentIMEI))
+                | !strEtDeviceIMEI.equals(currentIMEI)
+                | !strEtPhone.equals(Utils.currentDevice.getPhone())
+                | !strEtModelNumber.equals(Utils.currentDevice.getModelNumber())
+                | !strEtDeviceName.equals(Utils.currentDevice.getName())
+        )
             btnSave.setVisibility(View.VISIBLE);
         else
             btnSave.setVisibility(View.GONE);

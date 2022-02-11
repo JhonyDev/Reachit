@@ -59,6 +59,7 @@ public class TrackingActivity extends AppCompatActivity implements Info {
                             if (device != null)
                                 superList.add(device);
                         }
+                        tvDevices.setText(String.valueOf(superList.size()));
                         typeRecyclerViewAdapter.notifyDataSetChanged();
                     }
 
