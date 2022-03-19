@@ -60,7 +60,6 @@ public class SMSRemoteSettings extends AppCompatActivity {
     public static boolean isLocationEnabled(Context context) {
         int locationMode = 0;
         String locationProviders;
-
         try {
             locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
 
@@ -68,10 +67,7 @@ public class SMSRemoteSettings extends AppCompatActivity {
             e.printStackTrace();
             return false;
         }
-
         return locationMode != Settings.Secure.LOCATION_MODE_OFF;
-
-
     }
 
     @Override
@@ -120,19 +116,13 @@ public class SMSRemoteSettings extends AppCompatActivity {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
             alertDialog.setTitle("GPS is settings");
             alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?");
-            alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(intent);
-                }
+            alertDialog.setPositiveButton("Settings", (dialog, which) -> {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
             });
 
 
-            alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
+            alertDialog.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
 
             alertDialog.show();
         }

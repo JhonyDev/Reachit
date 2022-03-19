@@ -77,26 +77,14 @@ public class DashboardActivity extends AppCompatActivity implements Info {
 
 
     private boolean initPermission(String perm, int code) {
-        if (ContextCompat.checkSelfPermission(this,
-                perm)
+        if (ContextCompat.checkSelfPermission(this, perm)
                 != PackageManager.PERMISSION_GRANTED) {
-            Log.i("asd", "Check self permission");
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    perm)) {
-                Log.i("asd", "should show permission dialog");
-                ActivityCompat.requestPermissions(this,
-                        new String[]{perm},
-                        code);
-            } else {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{perm},
-                        code);
-            }
+            ActivityCompat.requestPermissions(this,
+                    new String[]{perm}, code);
             return false;
-        } else {
-            Log.i("long", "///////Permission granted");
+        } else
             return true;
-        }
+
     }
 
 
@@ -104,7 +92,6 @@ public class DashboardActivity extends AppCompatActivity implements Info {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         initPermissions();
-
     }
 
     private void initTextWatchers() {
@@ -233,5 +220,11 @@ public class DashboardActivity extends AppCompatActivity implements Info {
                     } else
                         Toast.makeText(DashboardActivity.this, "Unsuccessful", Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    public void logout(View view) {
+        FirebaseAuth.getInstance().signOut();
+        startActivity(new Intent(this, LoginActivity.class));
+        finish();
     }
 }

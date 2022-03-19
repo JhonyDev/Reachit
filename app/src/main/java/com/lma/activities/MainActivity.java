@@ -3,6 +3,7 @@ package com.lma.activities;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,6 +20,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -27,6 +29,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.lma.R;
+import com.lma.recievers.SmsReceiver;
 import com.lma.services.LockScreenManager;
 import com.lma.ui.main.SectionsPagerAdapter;
 import com.lma.viewpager.VerticalViewPager;
@@ -58,12 +61,22 @@ public class MainActivity extends AppCompatActivity {
     float factor;
     float factor2;
 
+    private void enableBroadcastReceiver() {
+        ComponentName receiver = new ComponentName(this, SmsReceiver.class);
+        PackageManager pm = this.getPackageManager();
+        pm.setComponentEnabledSetting(receiver,
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                PackageManager.DONT_KILL_APP);
+        Toast.makeText(this, "Broadcast receiver Enabled", Toast.LENGTH_SHORT).show();
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        enableBroadcastReceiver();
         metrics = getResources().getDisplayMetrics();
 
         tvReach = findViewById(R.id.tv_reach);

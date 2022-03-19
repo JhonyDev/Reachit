@@ -12,7 +12,6 @@ import com.lma.R;
 
 public class TypeRecyclerViewHolder extends RecyclerView.ViewHolder {
 
-
     TextView tvName;
     TextView tvIMEI;
     TextView tvModelNumber;
@@ -33,6 +32,7 @@ public class TypeRecyclerViewHolder extends RecyclerView.ViewHolder {
         btnRing = itemView.findViewById(R.id.btn_ring);
         btnMap = itemView.findViewById(R.id.btn_map);
         btnReqCall = itemView.findViewById(R.id.btn_request_call);
+
     }
 
 }

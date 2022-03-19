@@ -6,12 +6,6 @@ public class UserPojo {
     String email;
     String phoneNumber;
     String emergencyPhoneNumber;
-    String height;
-    String weight;
-    String BMI;
-    String isDiabetic;
-    String isBloodPressure;
-    String isHeartDisease;
 
     public UserPojo() {
     }
@@ -32,12 +26,6 @@ public class UserPojo {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.emergencyPhoneNumber = emergencyPhoneNumber;
-        this.height = height;
-        this.weight = weight;
-        this.BMI = BMI;
-        this.isDiabetic = isDiabetic;
-        this.isBloodPressure = isBloodPressure;
-        this.isHeartDisease = isHeartDisease;
     }
 
     public String getUsername() {
@@ -70,54 +58,6 @@ public class UserPojo {
 
     public void setEmergencyPhoneNumber(String emergencyPhoneNumber) {
         this.emergencyPhoneNumber = emergencyPhoneNumber;
-    }
-
-    public String getHeight() {
-        return height;
-    }
-
-    public void setHeight(String height) {
-        this.height = height;
-    }
-
-    public String getWeight() {
-        return weight;
-    }
-
-    public void setWeight(String weight) {
-        this.weight = weight;
-    }
-
-    public String getBMI() {
-        return BMI;
-    }
-
-    public void setBMI(String BMI) {
-        this.BMI = BMI;
-    }
-
-    public String getIsDiabetic() {
-        return isDiabetic;
-    }
-
-    public void setIsDiabetic(String isDiabetic) {
-        this.isDiabetic = isDiabetic;
-    }
-
-    public String getIsBloodPressure() {
-        return isBloodPressure;
-    }
-
-    public void setIsBloodPressure(String isBloodPressure) {
-        this.isBloodPressure = isBloodPressure;
-    }
-
-    public String getIsHeartDisease() {
-        return isHeartDisease;
-    }
-
-    public void setIsHeartDisease(String isHeartDisease) {
-        this.isHeartDisease = isHeartDisease;
     }
 
 }

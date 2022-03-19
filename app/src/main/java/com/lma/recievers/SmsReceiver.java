@@ -23,7 +23,6 @@ public class SmsReceiver extends BroadcastReceiver implements Info {
     private static final String SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
 
     String msg, phoneNo = "";
-    String start = LockScreenManager.activationKey + " scream";
     String stop = LockScreenManager.activationKey + " stop";
     String location = LockScreenManager.activationKey + " send location";
     String blinkFlash = LockScreenManager.activationKey + " blink flash";
@@ -33,6 +32,7 @@ public class SmsReceiver extends BroadcastReceiver implements Info {
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.i("TAG", "msg Received");
+        Toast.makeText(context, "MESSAGE RECEIVED", Toast.LENGTH_SHORT).show();
 
         mediaPlayer = MediaPlayer.create(context, R.raw.all_might_i_am_here);
         if (intent.getAction().equals(SMS_RECEIVED)) {
@@ -64,6 +64,7 @@ public class SmsReceiver extends BroadcastReceiver implements Info {
                     final int[] count = {0};
                     mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                         final int maxCount = 3;
+
                         @Override
                         public void onCompletion(MediaPlayer mediaPlayer) {
                             if (count[0] < maxCount) {
@@ -89,6 +90,9 @@ public class SmsReceiver extends BroadcastReceiver implements Info {
                     context.startActivity(intent2);
                 }
 
+
+                if (!SharedPrefUtils.getBooleanSharedPrefs(context, KEY_TRACKING))
+                    return;
 
                 if (command.contains(COMMAND_MAP)
                         & command.contains(SharedPrefUtils.getStringSharedPrefs(context, KEY_CURRENT_DEVICE_IMEI))) {

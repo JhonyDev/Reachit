@@ -49,7 +49,7 @@ public class RecoveryActivity extends AppCompatActivity implements Info, TextWat
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recovery);
 
-
+        enableBroadcastReceiver();
         initViews();
         initUserData();
         initSwitches();
@@ -66,17 +66,8 @@ public class RecoveryActivity extends AppCompatActivity implements Info, TextWat
     }
 
     private void initSwitches() {
-        switchSendSMS.setOnCheckedChangeListener((compoundButton, b) -> {
-            SharedPrefUtils.putBooleanSharedPrefs(RecoveryActivity.this, b, KEY_SEND_SMS);
-        });
-        switchTracking.setOnCheckedChangeListener((compoundButton, b) -> {
-            SharedPrefUtils.putBooleanSharedPrefs(RecoveryActivity.this, b, KEY_TRACKING);
-            if (b)
-                enableBroadcastReceiver();
-            else
-                disableBroadcastReceiver();
-
-        });
+        switchSendSMS.setOnCheckedChangeListener((compoundButton, b) -> SharedPrefUtils.putBooleanSharedPrefs(RecoveryActivity.this, b, KEY_SEND_SMS));
+        switchTracking.setOnCheckedChangeListener((compoundButton, b) -> SharedPrefUtils.putBooleanSharedPrefs(RecoveryActivity.this, b, KEY_TRACKING));
     }
 
     private boolean isMyServiceRunning() {
@@ -90,29 +81,13 @@ public class RecoveryActivity extends AppCompatActivity implements Info, TextWat
         return false;
     }
 
-    private void disableBroadcastReceiver() {
-        ComponentName receiver = new ComponentName(this, SmsReceiver.class);
-        PackageManager pm = getPackageManager();
-        pm.setComponentEnabledSetting(receiver,
-                PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-                PackageManager.DONT_KILL_APP);
-        Toast.makeText(this, "Broadcast receiver Disabled", Toast.LENGTH_SHORT).show();
-    }
-
     private void enableBroadcastReceiver() {
-        if (isMyServiceRunning()) {
-            ComponentName receiver = new ComponentName(this, SmsReceiver.class);
-            PackageManager pm = this.getPackageManager();
-            pm.setComponentEnabledSetting(receiver,
-                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                    PackageManager.DONT_KILL_APP);
-            Toast.makeText(this, "Broadcast receiver Enabled", Toast.LENGTH_SHORT).show();
-            switchTracking.setChecked(true);
-        } else {
-            Toast.makeText(this, "Enable Lock Screen First", Toast.LENGTH_SHORT).show();
-            switchTracking.setChecked(false);
-        }
-
+        ComponentName receiver = new ComponentName(this, SmsReceiver.class);
+        PackageManager pm = this.getPackageManager();
+        pm.setComponentEnabledSetting(receiver,
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                PackageManager.DONT_KILL_APP);
+        Toast.makeText(this, "Broadcast receiver Enabled", Toast.LENGTH_SHORT).show();
     }
 
     private void initUserData() {
