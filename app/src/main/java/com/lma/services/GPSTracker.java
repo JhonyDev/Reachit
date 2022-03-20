@@ -17,29 +17,22 @@ import android.util.Log;
 
 public class GPSTracker extends Service implements LocationListener {
 
+    // The minimum distance to change Updates in meters
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 2; // 10 meters
+    // The minimum time between updates in milliseconds
+    private static final long MIN_TIME_BW_UPDATES = 1000;
     private final Context mContext;
-
+    // Declaring a Location Manager
+    protected LocationManager locationManager;
     // flag for GPS status
     boolean isGPSEnabled = false;
-
     // flag for network status
     boolean isNetworkEnabled = false;
-
     // flag for GPS status
     boolean canGetLocation = false;
-
     Location location; // location
     double latitude; // latitude
     double longitude; // longitude
-
-    // The minimum distance to change Updates in meters
-    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 2; // 10 meters
-
-    // The minimum time between updates in milliseconds
-    private static final long MIN_TIME_BW_UPDATES = 1000;
-
-    // Declaring a Location Manager
-    protected LocationManager locationManager;
 
     public GPSTracker(Context context) {
         this.mContext = context;
@@ -77,6 +70,7 @@ public class GPSTracker extends Service implements LocationListener {
                                 LocationManager.GPS_PROVIDER,
                                 MIN_TIME_BW_UPDATES,
                                 MIN_DISTANCE_CHANGE_FOR_UPDATES, GPSTracker.this);
+
                         Log.i("GPS Enabled", "///////GPS Enabled");
                         if (locationManager != null) {
                             Log.i("GPS Enabled", "///////locationManager not null");
@@ -88,18 +82,12 @@ public class GPSTracker extends Service implements LocationListener {
                                 longitude = location.getLongitude();
                             }
                         }
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                stopUsingGPS();
-                            }
-                        }, 30 * 1000);
+                        new Handler().postDelayed(this::stopUsingGPS, 30 * 1000);
 
                     }
                 }
-            } else {
-                // no network provider is enabled
-            }
+            }  // no network provider is enabled
+
 
         } catch (Exception e) {
             e.printStackTrace();

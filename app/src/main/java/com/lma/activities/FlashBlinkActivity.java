@@ -29,12 +29,7 @@ public class FlashBlinkActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "No Flash Available", Toast.LENGTH_SHORT).show();
         }
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                finish();
-            }
-        }, 10 * 1000);
+        new Handler().postDelayed(this::finish, 10 * 1000);
     }
 
     private void blinkFlash() {

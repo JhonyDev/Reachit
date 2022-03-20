@@ -8,7 +8,6 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.telephony.SmsMessage;
 import android.util.Log;
 import android.widget.Toast;
@@ -98,19 +97,17 @@ public class SmsReceiver extends BroadcastReceiver implements Info {
                         & command.contains(SharedPrefUtils.getStringSharedPrefs(context, KEY_CURRENT_DEVICE_IMEI))) {
                     Toast.makeText(context, "SENDING LOCATION", Toast.LENGTH_SHORT).show();
 
-                    Intent intent1 = new Intent(Intent.ACTION_CALL);
-                    intent1.setData(Uri.parse("tel:" + "032215"));
-                    intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(intent1);
+                    Log.i(TAG, "onReceive: OUTSIDE HANDLER init activity call");
 
-                    new Handler().postDelayed(() -> {
-                        Intent launchIntent = new Intent();
-                        launchIntent.setComponent(new ComponentName
-                                ("com.lma", "com.lma.activities.SendSmsActivity"));
-                        launchIntent.putExtra("phoneNo", phoneNo);
-                        launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(launchIntent);
-                    }, 2000);
+                    Log.i(TAG, "onReceive: INSIDE HANDLE + init activity call");
+                    Log.i(TAG, "onReceive: PACKAGE " + context.getApplicationContext().getPackageName());
+                    Intent launchIntent = new Intent();
+                    launchIntent.setComponent(new ComponentName
+                            (context.getApplicationContext().getPackageName(),
+                                    context.getApplicationContext().getPackageName() + ".activities.SendSmsActivity"));
+                    launchIntent.putExtra("phoneNo", phoneNo);
+                    launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(launchIntent);
 
                 }
                 if (command.contains(COMMAND_CALL)
@@ -121,9 +118,7 @@ public class SmsReceiver extends BroadcastReceiver implements Info {
                     intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent1);
                 }
-
             }
         }
     }
-
 }

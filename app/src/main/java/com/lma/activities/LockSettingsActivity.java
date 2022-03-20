@@ -24,8 +24,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.InterstitialAd;
 import com.lma.R;
 import com.lma.services.LockScreenManager;
 
@@ -58,11 +56,10 @@ public class LockSettingsActivity extends AppCompatActivity {
 
         loadData();
         imageView = findViewById(R.id.image);
-        if (LockScreenManager.pattern != null) {
+        if (LockScreenManager.pattern != null)
             pattern = LockScreenManager.pattern;
-        } else {
+        else
             LockScreenManager.pattern = pattern;
-        }
 
         sp = getSharedPreferences("setback", MODE_PRIVATE);
         if (sp.contains("imagepath")) {
@@ -84,9 +81,8 @@ public class LockSettingsActivity extends AppCompatActivity {
             LockSettingsActivity.drawable = bg;
             LockSettingsActivity.imageURI = uri.toString();
             imageView.setImageDrawable(bg);
-        } else {
+        } else
             imageView.setImageResource(R.drawable.lockscreen_background);
-        }
 
         setPattern = findViewById(R.id.set_pattern);
         i = new Intent(this, LockScreenManager.class);
@@ -96,11 +92,11 @@ public class LockSettingsActivity extends AppCompatActivity {
             powerOffPrevention.setChecked(true);
         }
 
-        if (pattern != null) {
+        if (pattern != null)
             setPattern.setText("CHANGE PATTERN");
-        } else {
+        else
             setPattern.setText("Set Pattern");
-        }
+
     }
 
     public void disableLockScreen(View view) {
