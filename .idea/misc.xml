@@ -7,6 +7,7 @@
         <entry key="..\:/Users/Jhony Dev/Desktop/alsdjl/Reachit/app/src/main/res/layout/activity_s_m_s_remote_settings.xml" value="0.23148148148148148" />
         <entry key="..\:/Users/Jhony Dev/Desktop/extras/alsdjl/Reachit/app/src/main/res/drawable-v24/ic_group_648.xml" value="0.26614583333333336" />
         <entry key="..\:/Users/Jhony Dev/Desktop/extras/alsdjl/Reachit/app/src/main/res/drawable-v24/ic_group_654.xml" value="0.27384615384615385" />
+        <entry key="..\:/Users/Jhony Dev/Desktop/extras/alsdjl/Reachit/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1485" />
         <entry key="..\:/Users/Jhony Dev/Desktop/extras/alsdjl/Reachit/app/src/main/res/drawable-v24/ic_lock.xml" value="0.26614583333333336" />
         <entry key="..\:/Users/Jhony Dev/Desktop/extras/alsdjl/Reachit/app/src/main/res/drawable-v24/ic_mail.xml" value="0.26614583333333336" />
         <entry key="..\:/Users/Jhony Dev/Desktop/extras/alsdjl/Reachit/app/src/main/res/drawable-v24/ic_rectangle_1594.xml" value="0.26614583333333336" />
@@ -14,11 +15,14 @@
         <entry key="..\:/Users/Jhony Dev/Desktop/extras/alsdjl/Reachit/app/src/main/res/drawable/back2.xml" value="0.25052083333333336" />
         <entry key="..\:/Users/Jhony Dev/Desktop/extras/alsdjl/Reachit/app/src/main/res/drawable/back3.xml" value="0.25052083333333336" />
         <entry key="..\:/Users/Jhony Dev/Desktop/extras/alsdjl/Reachit/app/src/main/res/drawable/gradient_back_lock_settings.xml" value="0.26205128205128203" />
+        <entry key="..\:/Users/Jhony Dev/Desktop/extras/alsdjl/Reachit/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1485" />
+        <entry key="..\:/Users/Jhony Dev/Desktop/extras/alsdjl/Reachit/app/src/main/res/drawable/ic_lock_outline_black_24dp.xml" value="0.1485" />
         <entry key="..\:/Users/Jhony Dev/Desktop/extras/alsdjl/Reachit/app/src/main/res/drawable/ripple.xml" value="0.26614583333333336" />
         <entry key="..\:/Users/Jhony Dev/Desktop/extras/alsdjl/Reachit/app/src/main/res/drawable/selector.xml" value="0.26614583333333336" />
         <entry key="..\:/Users/Jhony Dev/Desktop/extras/alsdjl/Reachit/app/src/main/res/drawable/selector2.xml" value="0.26614583333333336" />
         <entry key="..\:/Users/Jhony Dev/Desktop/extras/alsdjl/Reachit/app/src/main/res/layout/activity_add_device.xml" value="0.264" />
         <entry key="..\:/Users/Jhony Dev/Desktop/extras/alsdjl/Reachit/app/src/main/res/layout/activity_dashboard.xml" value="0.264" />
+        <entry key="..\:/Users/Jhony Dev/Desktop/extras/alsdjl/Reachit/app/src/main/res/layout/activity_device_details.xml" value="0.234375" />
         <entry key="..\:/Users/Jhony Dev/Desktop/extras/alsdjl/Reachit/app/src/main/res/layout/activity_exit.xml" value="0.234375" />
         <entry key="..\:/Users/Jhony Dev/Desktop/extras/alsdjl/Reachit/app/src/main/res/layout/activity_instructions_lock_screen.xml" value="0.234375" />
         <entry key="..\:/Users/Jhony Dev/Desktop/extras/alsdjl/Reachit/app/src/main/res/layout/activity_lock_settings.xml" value="0.25" />
@@ -26,7 +30,7 @@
         <entry key="..\:/Users/Jhony Dev/Desktop/extras/alsdjl/Reachit/app/src/main/res/layout/activity_login2.xml" value="0.25" />
         <entry key="..\:/Users/Jhony Dev/Desktop/extras/alsdjl/Reachit/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/Users/Jhony Dev/Desktop/extras/alsdjl/Reachit/app/src/main/res/layout/activity_main_screen.xml" value="0.264" />
-        <entry key="..\:/Users/Jhony Dev/Desktop/extras/alsdjl/Reachit/app/src/main/res/layout/activity_recovery.xml" value="0.264" />
+        <entry key="..\:/Users/Jhony Dev/Desktop/extras/alsdjl/Reachit/app/src/main/res/layout/activity_recovery.xml" value="0.176" />
         <entry key="..\:/Users/Jhony Dev/Desktop/extras/alsdjl/Reachit/app/src/main/res/layout/activity_reset_password.xml" value="0.25" />
         <entry key="..\:/Users/Jhony Dev/Desktop/extras/alsdjl/Reachit/app/src/main/res/layout/activity_s_m_s_remote_settings.xml" value="0.1453125" />
         <entry key="..\:/Users/Jhony Dev/Desktop/extras/alsdjl/Reachit/app/src/main/res/layout/activity_send_sms.xml" value="0.13802083333333334" />

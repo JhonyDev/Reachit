@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.admin.DevicePolicyManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -26,6 +25,7 @@ import androidx.core.content.ContextCompat;
 
 import com.lma.R;
 import com.lma.services.LockScreenManager;
+import com.lma.utils.Utils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -87,9 +87,11 @@ public class LockSettingsActivity extends AppCompatActivity {
         setPattern = findViewById(R.id.set_pattern);
         i = new Intent(this, LockScreenManager.class);
         LockSettingsActivity.powerOffPrevention = findViewById(R.id.preventions_state);
-
         if (isMyServiceRunning()) {
-            powerOffPrevention.setChecked(true);
+            if (Utils.isPermissions(this))
+                powerOffPrevention.setChecked(true);
+            else
+                disableLockScreen();
         }
 
         if (pattern != null)
@@ -99,7 +101,7 @@ public class LockSettingsActivity extends AppCompatActivity {
 
     }
 
-    public void disableLockScreen(View view) {
+    public void disableLockScreen() {
         powerOffPrevention.setChecked(false);
         stopService(i);
     }
@@ -133,18 +135,16 @@ public class LockSettingsActivity extends AppCompatActivity {
     }
 
     public void checkPermission(View view) {
-        if (checkDrawOverlayPermission()) {
+        if (checkDrawOverlayPermission())
             if (LockScreenManager.pattern != null && !isMyServiceRunning()) {
-                powerOffPrevention.setChecked(true);
-                startService(i);
-            } else if (isMyServiceRunning()) {
-                Toast.makeText(context, "Already Enabled", Toast.LENGTH_SHORT).show();
-            } else {
+                if (Utils.isPermissions(this)) {
+                    powerOffPrevention.setChecked(true);
+                    startService(i);
+                }
+            } else if (isMyServiceRunning())
+                disableLockScreen();
+            else
                 Toast.makeText(context, "Set A Pattern First", Toast.LENGTH_SHORT).show();
-            }
-
-        }
-
     }
 
     public boolean checkDrawOverlayPermission() {
@@ -175,7 +175,6 @@ public class LockSettingsActivity extends AppCompatActivity {
 
     public void changeBackground(View view) {
         loadImagefromGallery();
-
     }
 
     public void loadImagefromGallery() {
@@ -229,10 +228,10 @@ public class LockSettingsActivity extends AppCompatActivity {
                 }
                 LockSettingsActivity.drawable = bg;
                 LockSettingsActivity.imageURI = uri.toString();
-            } else {
+            } else
                 Toast.makeText(this, "You haven't picked Image",
                         Toast.LENGTH_LONG).show();
-            }
+
         } catch (Exception e) {
             Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG)
                     .show();
@@ -240,22 +239,15 @@ public class LockSettingsActivity extends AppCompatActivity {
     }
 
     public void instructions(View view) {
-
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
         alertDialog.setTitle("Lock screen Instructions");
         alertDialog.setMessage("To avoid any issue set device lock to none from settings.");
 
-        alertDialog.setPositiveButton("Go to settings", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(DevicePolicyManager.ACTION_SET_NEW_PASSWORD);
-                startActivity(intent);
-            }
+        alertDialog.setPositiveButton("Go to settings", (dialog, which) -> {
+            Intent intent = new Intent(DevicePolicyManager.ACTION_SET_NEW_PASSWORD);
+            startActivity(intent);
         });
-        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
+        alertDialog.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
 
         alertDialog.show();
 

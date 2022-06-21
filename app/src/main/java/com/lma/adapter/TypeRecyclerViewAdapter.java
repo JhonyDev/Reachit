@@ -3,6 +3,7 @@ package com.lma.adapter;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.telephony.SmsManager;
 import android.util.Log;
@@ -15,10 +16,14 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.FirebaseDatabase;
 import com.lma.R;
+import com.lma.activities.DeviceDetailsActivity;
 import com.lma.info.Info;
 import com.lma.model.Device;
 import com.lma.model.Super;
+import com.lma.singletons.DeviceSingleton;
+import com.lma.utils.Utils;
 
 import java.util.List;
 
@@ -44,6 +49,7 @@ public class TypeRecyclerViewAdapter extends RecyclerView.Adapter<TypeRecyclerVi
     @Override
     public void onBindViewHolder(@NonNull final TypeRecyclerViewHolder holder, int position) {
         initNotices(holder, position);
+
     }
 
     private void initNotices(TypeRecyclerViewHolder holder, int position) {
@@ -52,10 +58,24 @@ public class TypeRecyclerViewAdapter extends RecyclerView.Adapter<TypeRecyclerVi
         holder.tvIMEI.setText(device.getIMEI());
         holder.tvPhone.setText(device.getPhone());
         holder.tvModelNumber.setText(device.getModelNumber());
+        holder.cvClick.setOnClickListener(view -> {
+            DeviceSingleton.setInstance(device);
+            context.startActivity(new Intent(context, DeviceDetailsActivity.class));
+        });
+
 
         holder.btnMap.setOnClickListener(view -> btnMap(device));
         holder.btnRing.setOnClickListener(view -> btnRing(device));
         holder.btnReqCall.setOnClickListener(view -> btnReqCall(device));
+        holder.btnRemove.setOnClickListener(view -> btnRemove(device));
+    }
+
+    private void btnRemove(Device device) {
+        FirebaseDatabase.getInstance().getReference()
+                .child(NODE_DEVICES)
+                .child(Utils.getCurrentUserId())
+                .child(device.getIMEI())
+                .removeValue();
     }
 
     private void btnReqCall(Device device) {
@@ -95,13 +115,10 @@ public class TypeRecyclerViewAdapter extends RecyclerView.Adapter<TypeRecyclerVi
     }
 
     private void btnRing(Device device) {
-//        TODO: RING THE DEVICE
         sendMessage(device.getPhone(), device.getIMEI(), COMMAND_RING);
-
     }
 
     private void btnMap(Device device) {
-//        TODO: GET LOCATION AND DISPLAY IT ON THE MAP
         sendMessage(device.getPhone(), device.getIMEI(), COMMAND_MAP);
 
     }

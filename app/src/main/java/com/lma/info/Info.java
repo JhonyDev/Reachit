@@ -1,7 +1,7 @@
 package com.lma.info;
 
 public interface Info {
-    String TAG = "tag";
+    String TAG = "investigation";
     String NODE_USERS = "Users";
     String NODE_DEVICES = "Devices";
 
@@ -21,6 +21,6 @@ public interface Info {
     String KEY_CURRENT_DEVICE_IMEI = "kjljlkjh";
 
 
-//    RecyclerView Adapter types
+    //    RecyclerView Adapter types
     int RV_TYPE_DEVICES = 1;
 }

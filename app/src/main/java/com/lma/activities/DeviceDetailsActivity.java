@@ -2,6 +2,7 @@ package com.lma.activities;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -11,31 +12,32 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.lma.R;
 import com.lma.info.Info;
 import com.lma.model.Device;
+import com.lma.singletons.DeviceSingleton;
 import com.lma.utils.DialogUtils;
 import com.lma.utils.Utils;
 
 import java.util.Objects;
-import java.util.UUID;
 
-public class AddDeviceActivity extends AppCompatActivity implements Info {
+public class DeviceDetailsActivity extends AppCompatActivity implements Info {
     Dialog dgLoading;
     EditText etName;
     EditText etModelNumber;
     EditText etIMEI;
     EditText etPhone;
-    EditText etEmergency;
 
-    String strEtEmergency;
     String strEtPhone;
     String strEtName;
     String strEtModelNumber;
     String strEtIMEI;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_device);
+        setContentView(R.layout.activity_device_details);
+
+        if (DeviceSingleton.getInstance() == null)
+            finish();
+
         initViews();
         dgLoading = new Dialog(this);
         DialogUtils.initLoadingDialog(dgLoading);
@@ -50,6 +52,12 @@ public class AddDeviceActivity extends AppCompatActivity implements Info {
         etModelNumber = findViewById(R.id.et_email);
         etIMEI = findViewById(R.id.et_pass);
         etPhone = findViewById(R.id.et_phone);
+
+        etName.setText(DeviceSingleton.getInstance().getName());
+        etModelNumber.setText(DeviceSingleton.getInstance().getModelNumber());
+        etIMEI.setText(DeviceSingleton.getInstance().getIMEI());
+        etPhone.setText(DeviceSingleton.getInstance().getPhone());
+
     }
 
 
@@ -70,24 +78,28 @@ public class AddDeviceActivity extends AppCompatActivity implements Info {
             return;
         if (!Utils.validEt(etPhone, strEtPhone))
             return;
-        if (!Utils.validEt(etEmergency, strEtEmergency))
-            return;
+
         initData();
     }
 
     private void initData() {
-        String id = UUID.randomUUID().toString();
-        Device device = new Device(id, strEtName, strEtModelNumber, strEtIMEI, strEtPhone);
+        Device device = new Device(DeviceSingleton.getInstance().getId(),
+                strEtName, strEtModelNumber, strEtIMEI, strEtPhone);
+
+        Log.i(TAG, "sdasd : " + strEtIMEI);
+        Log.i(TAG, "sdasd : " + strEtModelNumber);
+        Log.i(TAG, "sdasd : " + strEtPhone);
+
         Utils.getReference().child(NODE_DEVICES)
                 .child(Utils.getCurrentUserId())
                 .child(strEtIMEI)
                 .setValue(device)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Toast.makeText(AddDeviceActivity.this, "Device added successfully", Toast.LENGTH_SHORT).show();
-                        AddDeviceActivity.this.finish();
+                        Toast.makeText(DeviceDetailsActivity.this, "Device added successfully", Toast.LENGTH_SHORT).show();
+                        DeviceDetailsActivity.this.finish();
                     } else {
-                        Toast.makeText(AddDeviceActivity.this, "Device not added at the moment", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DeviceDetailsActivity.this, "Device not added at the moment", Toast.LENGTH_SHORT).show();
                         Objects.requireNonNull(task.getException()).printStackTrace();
                     }
                 });

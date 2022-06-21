@@ -3,11 +3,13 @@
     package="com.lma">
 
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.BROADCAST_SMS" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
+
     <uses-feature android:name="android.hardware.camera2" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -22,6 +24,8 @@
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
     <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- <uses-permission android:name="android.permission.INTERNET"/> -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
 
     <application
         android:name=".App"
@@ -33,6 +37,9 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activities.RecoveryActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.DeviceDetailsActivity"
             android:exported="true" />
         <activity
             android:name=".activities.TrackingActivity"
@@ -95,12 +102,10 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
-        <receiver
-            android:name=".recievers.SimStateReceiver"
-            android:enabled="true"
-            android:exported="true">
+
+        <receiver android:name=".recievers.ServiceReceiver">
             <intent-filter>
-                <action android:name="android.provider.Telephony.SIM_STATE_CHANGED" />
+                <action android:name="android.intent.action.PHONE_STATE" />
             </intent-filter>
         </receiver>
 

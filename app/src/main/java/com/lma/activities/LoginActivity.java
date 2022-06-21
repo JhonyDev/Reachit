@@ -2,7 +2,9 @@ package com.lma.activities;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -11,16 +13,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 import com.lma.R;
 import com.lma.info.Info;
-import com.lma.model.Device;
+import com.lma.recievers.ServiceReceiver;
 import com.lma.utils.DialogUtils;
 import com.lma.utils.SharedPrefUtils;
 import com.lma.utils.Utils;
@@ -50,7 +48,7 @@ public class LoginActivity extends AppCompatActivity implements Info {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        context = this;
+        SharedPrefUtils.putStringSharedPrefs(this, Utils.getDeviceId(this), KEY_CURRENT_DEVICE_IMEI);
 
         etEmail = findViewById(R.id.et_email);
         etPassword = findViewById(R.id.et_pass);
@@ -63,6 +61,15 @@ public class LoginActivity extends AppCompatActivity implements Info {
             startActivity(new Intent(this, DashboardActivity.class));
             finish();
         }
+        enableBroadcastReceiver();
+    }
+
+    private void enableBroadcastReceiver() {
+        ComponentName receiver = new ComponentName(this, ServiceReceiver.class);
+        PackageManager pm = this.getPackageManager();
+        pm.setComponentEnabledSetting(receiver,
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                PackageManager.DONT_KILL_APP);
 
     }
 
@@ -113,8 +120,7 @@ public class LoginActivity extends AppCompatActivity implements Info {
                     if (task.isSuccessful()) {
                         startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
                         finish();
-                    }
-                    else {
+                    } else {
                         Objects.requireNonNull(task.getException()).printStackTrace();
                         try {
                             Toast.makeText(LoginActivity.this,

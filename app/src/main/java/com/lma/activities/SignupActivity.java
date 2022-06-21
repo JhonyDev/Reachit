@@ -136,6 +136,13 @@ public class SignupActivity extends AppCompatActivity implements Info {
                     else {
                         Log.i(TAG, "signUp: " + Objects.requireNonNull(task.getException()).getMessage());
                         task.getException().printStackTrace();
+                        Objects.requireNonNull(task.getException()).printStackTrace();
+                        try {
+                            Toast.makeText(SignupActivity.this,
+                                    task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        } catch (NullPointerException e) {
+                            Log.i(TAG, "initSignIn: Null Exception");
+                        }
                     }
                 });
 

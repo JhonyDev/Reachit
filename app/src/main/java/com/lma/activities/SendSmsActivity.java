@@ -45,6 +45,7 @@ public class SendSmsActivity extends AppCompatActivity {
 
         }
     };
+
     int LOCATION_REFRESH_TIME = 1000; // 15 seconds to update
     int LOCATION_REFRESH_DISTANCE = 100; // 500 meters to update
 

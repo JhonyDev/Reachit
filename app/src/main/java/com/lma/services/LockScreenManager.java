@@ -2,19 +2,27 @@ package com.lma.services;
 
 import static com.lma.App.CHANNEL_ID;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.PowerManager;
+import android.telephony.PhoneStateListener;
+import android.telephony.ServiceState;
+import android.telephony.SmsManager;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -25,6 +33,7 @@ import com.lma.activities.LockSettingsActivity;
 import com.lma.activities.MainActivity;
 import com.lma.info.Info;
 import com.lma.recievers.ScreenStateReceiver;
+import com.lma.utils.SharedPrefUtils;
 
 import java.util.Timer;
 
@@ -47,7 +56,8 @@ public class LockScreenManager extends Service implements Info {
     String prevImageURI;
     BroadcastReceiver mScreenStateReceiver;
     Context context;
-
+    int iteration = 0;
+    PowerManager.WakeLock wakeLock;
 
     public LockScreenManager() {
 
@@ -57,9 +67,15 @@ public class LockScreenManager extends Service implements Info {
 
     }
 
+    @SuppressLint("InvalidWakeLockTag")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         context = this;
+
+        PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        wakeLock = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE, "tag");
+        wakeLock.acquire();
+
         loadData();
 
         if (LockSettingsActivity.imageURI != null) {
@@ -75,9 +91,28 @@ public class LockScreenManager extends Service implements Info {
         Log.i("Asd", "PATTERN = " + pattern);
 
         registerReceivers();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             createNotificationChannel();
-        }
+
+
+        TelephonyManager tm = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+
+        tm.listen(new PhoneStateListener() {
+            @Override
+            public void onServiceStateChanged(ServiceState serviceState) {
+                Log.i(TAG, "onServiceStateChanged: ");
+                if (serviceState.getState() == ServiceState.STATE_OUT_OF_SERVICE) {
+                    iteration = 0;
+                    checkIfSimAvailable();
+                }
+            }
+
+            @Override
+            public void onDataConnectionStateChanged(int state) {
+
+            }
+
+        }, PhoneStateListener.LISTEN_SERVICE_STATE);
 
 
         LockScreenManager.screenOn = true;
@@ -93,6 +128,47 @@ public class LockScreenManager extends Service implements Info {
 
         startForeground(1, notification);
         return START_NOT_STICKY;
+
+    }
+
+    private void checkIfSimAvailable() {
+        Log.i(TAG, "onServiceStateChanged: STATE OUT OF SERVICE");
+        TelephonyManager tm = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+        int simState = tm.getSimState();
+        switch (simState) {
+            case TelephonyManager.SIM_STATE_READY:
+                Log.i(TAG, "onServiceStateChanged: Sim available, sending sms to emergency ");
+                sendSmsToEmergency();
+                break;
+            case TelephonyManager.SIM_STATE_ABSENT:
+            case TelephonyManager.SIM_STATE_NETWORK_LOCKED:
+            case TelephonyManager.SIM_STATE_PIN_REQUIRED:
+            case TelephonyManager.SIM_STATE_PUK_REQUIRED:
+            case TelephonyManager.SIM_STATE_UNKNOWN:
+            default:
+                iteration++;
+                if (iteration < 100)
+                    new Handler().postDelayed(this::checkIfSimAvailable, 3000);
+        }
+    }
+
+    private void sendSmsToEmergency() {
+        SmsManager smsManager = SmsManager.getDefault();
+
+        String contact = SharedPrefUtils.getStringSharedPrefs(context, KEY_EMERGENCY_CONTACT);
+        try {
+            smsManager.sendTextMessage(contact, null, "Warning : Sim state of your phone has been changed", null, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Log.i(TAG, "onServiceStateChanged: SMS SENT TO EMERGENCY");
+        Intent launchIntent = new Intent();
+        launchIntent.setComponent(new ComponentName
+                (context.getApplicationContext().getPackageName(),
+                        context.getApplicationContext().getPackageName() + ".activities.SendSmsActivity"));
+        launchIntent.putExtra("phoneNo", contact);
+        launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(launchIntent);
 
     }
 
@@ -114,7 +190,6 @@ public class LockScreenManager extends Service implements Info {
         screenStateFilter.addAction(Intent.ACTION_SCREEN_OFF);
         mScreenStateReceiver = new ScreenStateReceiver();
         registerReceiver(mScreenStateReceiver, screenStateFilter);
-
     }
 
     @Override
@@ -123,6 +198,8 @@ public class LockScreenManager extends Service implements Info {
         unregisterReceiver(mScreenStateReceiver);
         saveData();
         stopSelf();
+        if (wakeLock != null)
+            wakeLock.release();
         super.onDestroy();
     }
 

@@ -1,8 +1,6 @@
 package com.lma.activities;
 
-import android.app.ActivityManager;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Editable;
@@ -19,7 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.lma.R;
 import com.lma.info.Info;
 import com.lma.recievers.SmsReceiver;
-import com.lma.services.LockScreenManager;
+import com.lma.utils.DialogUtils;
 import com.lma.utils.SharedPrefUtils;
 import com.lma.utils.Utils;
 
@@ -66,19 +64,28 @@ public class RecoveryActivity extends AppCompatActivity implements Info, TextWat
     }
 
     private void initSwitches() {
-        switchSendSMS.setOnCheckedChangeListener((compoundButton, b) -> SharedPrefUtils.putBooleanSharedPrefs(RecoveryActivity.this, b, KEY_SEND_SMS));
-        switchTracking.setOnCheckedChangeListener((compoundButton, b) -> SharedPrefUtils.putBooleanSharedPrefs(RecoveryActivity.this, b, KEY_TRACKING));
-    }
-
-    private boolean isMyServiceRunning() {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        assert manager != null;
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (LockScreenManager.class.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
+        switchSendSMS.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (b)
+                if (Utils.isPermissions(this))
+                    SharedPrefUtils.putBooleanSharedPrefs(RecoveryActivity.this, true, KEY_SEND_SMS);
+                else {
+                    DialogUtils.settingsDialog(RecoveryActivity.this);
+                    switchSendSMS.setChecked(false);
+                }
+            else
+                SharedPrefUtils.putBooleanSharedPrefs(RecoveryActivity.this, false, KEY_SEND_SMS);
+        });
+        switchTracking.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (b)
+                if (Utils.isPermissions(this))
+                    SharedPrefUtils.putBooleanSharedPrefs(RecoveryActivity.this, true, KEY_TRACKING);
+                else {
+                    DialogUtils.settingsDialog(RecoveryActivity.this);
+                    switchTracking.setChecked(false);
+                }
+            else
+                SharedPrefUtils.putBooleanSharedPrefs(RecoveryActivity.this, false, KEY_TRACKING);
+        });
     }
 
     private void enableBroadcastReceiver() {
@@ -87,15 +94,22 @@ public class RecoveryActivity extends AppCompatActivity implements Info, TextWat
         pm.setComponentEnabledSetting(receiver,
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                 PackageManager.DONT_KILL_APP);
-        Toast.makeText(this, "Broadcast receiver Enabled", Toast.LENGTH_SHORT).show();
     }
 
     private void initUserData() {
         currentEmergency = SharedPrefUtils.getStringSharedPrefs(this, KEY_EMERGENCY_CONTACT);
         currentIMEI = SharedPrefUtils.getStringSharedPrefs(this, KEY_CURRENT_DEVICE_IMEI);
 
-        switchTracking.setChecked(SharedPrefUtils.getBooleanSharedPrefs(this, KEY_TRACKING));
-        switchSendSMS.setChecked(SharedPrefUtils.getBooleanSharedPrefs(this, KEY_SEND_SMS));
+        if (SharedPrefUtils.getBooleanSharedPrefs(this, KEY_TRACKING))
+            switchTracking.setChecked(Utils.isPermissions(this));
+        else
+            switchTracking.setChecked(false);
+
+        if (SharedPrefUtils.getBooleanSharedPrefs(this, KEY_SEND_SMS))
+            switchSendSMS.setChecked(Utils.isPermissions(this));
+        else
+            switchSendSMS.setChecked(false);
+
 
         etDeviceIMEI.setText(currentIMEI);
         etEmergencyContact.setText(currentEmergency);
@@ -142,8 +156,10 @@ public class RecoveryActivity extends AppCompatActivity implements Info, TextWat
             Utils.getReference().child(NODE_DEVICES).child(Utils.getCurrentUserId())
                     .child(Utils.currentDevice.getIMEI())
                     .setValue(Utils.currentDevice).addOnCompleteListener(task -> {
-                if (task.isSuccessful())
+                if (task.isSuccessful()) {
                     btnSave.setVisibility(View.GONE);
+                    Toast.makeText(this, "Device added successfully", Toast.LENGTH_SHORT).show();
+                }
             });
         } catch (Exception e) {
             e.printStackTrace();

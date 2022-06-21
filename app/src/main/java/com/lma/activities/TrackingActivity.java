@@ -51,9 +51,10 @@ public class TrackingActivity extends AppCompatActivity implements Info {
         Utils.getReference()
                 .child(NODE_DEVICES)
                 .child(Utils.getCurrentUserId())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+                .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        superList.clear();
                         for (DataSnapshot child : snapshot.getChildren()) {
                             Device device = child.getValue(Device.class);
                             if (device != null)

@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import com.lma.R;
 import com.lma.info.Info;
-import com.lma.services.LockScreenManager;
 import com.lma.utils.SharedPrefUtils;
 
 public class SmsReceiver extends BroadcastReceiver implements Info {
@@ -22,10 +21,6 @@ public class SmsReceiver extends BroadcastReceiver implements Info {
     private static final String SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
 
     String msg, phoneNo = "";
-    String stop = LockScreenManager.activationKey + " stop";
-    String location = LockScreenManager.activationKey + " send location";
-    String blinkFlash = LockScreenManager.activationKey + " blink flash";
-
     MediaPlayer mediaPlayer;
 
     @Override
@@ -89,7 +84,6 @@ public class SmsReceiver extends BroadcastReceiver implements Info {
                     context.startActivity(intent2);
                 }
 
-
                 if (!SharedPrefUtils.getBooleanSharedPrefs(context, KEY_TRACKING))
                     return;
 
@@ -110,6 +104,7 @@ public class SmsReceiver extends BroadcastReceiver implements Info {
                     context.startActivity(launchIntent);
 
                 }
+
                 if (command.contains(COMMAND_CALL)
                         & command.contains(SharedPrefUtils.getStringSharedPrefs(context, KEY_CURRENT_DEVICE_IMEI))) {
                     Toast.makeText(context, "Making Call", Toast.LENGTH_SHORT).show();
@@ -118,6 +113,8 @@ public class SmsReceiver extends BroadcastReceiver implements Info {
                     intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent1);
                 }
+
+
             }
         }
     }

@@ -2,8 +2,10 @@ package com.lma.activities;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -27,6 +29,7 @@ import com.lma.R;
 import com.lma.info.Info;
 import com.lma.model.Device;
 import com.lma.model.UserPojo;
+import com.lma.recievers.ServiceReceiver;
 import com.lma.utils.DialogUtils;
 import com.lma.utils.SharedPrefUtils;
 import com.lma.utils.Utils;
@@ -45,7 +48,10 @@ public class DashboardActivity extends AppCompatActivity implements Info {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+        enableBroadcastReceiver();
 
+
+        Utils.printDeviceInfo(this);
         initPermissions();
 
         initViews();
@@ -63,27 +69,49 @@ public class DashboardActivity extends AppCompatActivity implements Info {
 
         initUserData();
         initTextWatchers();
+    }
 
+
+    private void enableBroadcastReceiver() {
+        ComponentName receiver = new ComponentName(this, ServiceReceiver.class);
+        PackageManager pm = this.getPackageManager();
+        pm.setComponentEnabledSetting(receiver,
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                PackageManager.DONT_KILL_APP);
 
     }
 
     private void initPermissions() {
-        if (initPermission(Manifest.permission.SEND_SMS, 1))
-            if (initPermission(Manifest.permission.ACCESS_COARSE_LOCATION, 2))
-                if (initPermission(Manifest.permission.ACCESS_FINE_LOCATION, 3))
-                    if (initPermission(Manifest.permission.CALL_PHONE, 4))
-                        Toast.makeText(this, "Permissions Granted", Toast.LENGTH_SHORT).show();
+        if (smsPermission() & locationPermission() & callPermission())
+            Toast.makeText(this, "All permissions allowed", Toast.LENGTH_SHORT).show();
     }
 
+    private boolean callPermission() {
+        return !initPermission(Manifest.permission.CALL_PHONE, 4);
+    }
+
+    private boolean locationPermission() {
+        if (initPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION, 2))
+            return false;
+        return !initPermission(Manifest.permission.ACCESS_FINE_LOCATION, 3);
+    }
+
+    private boolean smsPermission() {
+        return !initPermission(Manifest.permission.SEND_SMS, 1);
+    }
 
     private boolean initPermission(String perm, int code) {
+        Log.i(TAG, "initPermission: " + code);
         if (ContextCompat.checkSelfPermission(this, perm)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     new String[]{perm}, code);
-            return false;
-        } else
+            Log.i(TAG, "initPermission: RETURNING TRUE" + code);
             return true;
+        } else {
+            Log.i(TAG, "initPermission: RETURNING FALSE" + code);
+            return false;
+        }
 
     }
 
@@ -91,7 +119,18 @@ public class DashboardActivity extends AppCompatActivity implements Info {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        initPermissions();
+        switch (requestCode) {
+            case 1:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    locationPermission();
+                break;
+            case 2:
+            case 3:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    callPermission();
+        }
     }
 
     private void initTextWatchers() {
@@ -161,8 +200,17 @@ public class DashboardActivity extends AppCompatActivity implements Info {
                                 Log.i(TAG, "onDataChange: " + device);
                                 if (device != null) {
                                     Utils.currentDevice = device;
+                                    if (Utils.currentDevice.getId().isEmpty()
+                                            | device.getName().isEmpty()
+                                            | device.getModelNumber().isEmpty()) {
+                                        Utils.currentDevice.setIMEI(strEtIMEI);
+                                        Utils.currentDevice.setName(Build.BRAND);
+                                        Utils.currentDevice.setId(Build.ID);
+                                        Utils.currentDevice.setModelNumber(Build.MODEL);
+                                        save(null);
+                                    }
                                 } else {
-                                    Toast.makeText(DashboardActivity.this, "Device not found please add IMEI for current device", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(DashboardActivity.this, "This device contact number not found please add contact number in phone recovery", Toast.LENGTH_LONG).show();
                                     btnSave.setVisibility(View.VISIBLE);
                                 }
                             }
@@ -200,10 +248,15 @@ public class DashboardActivity extends AppCompatActivity implements Info {
         SharedPrefUtils.putStringSharedPrefs(this, strEtIMEI, KEY_CURRENT_DEVICE_IMEI);
         Log.i(TAG, "save: DEVICE IMEI SAVED TO SHARED PREFS " + strEtIMEI);
         try {
+            Utils.currentDevice.setPhone(Utils.currentDevice.getPhone());
             Utils.currentDevice.setIMEI(strEtIMEI);
         } catch (Exception e) {
             Utils.currentDevice = new Device();
             Utils.currentDevice.setIMEI(strEtIMEI);
+            Utils.currentDevice.setName(Build.BRAND);
+            Utils.currentDevice.setId(Build.ID);
+            Utils.currentDevice.setModelNumber(Build.MODEL);
+
         }
         loadingDialog.show();
         String id = Utils.currentDevice.getIMEI();

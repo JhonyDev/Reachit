@@ -68,27 +68,6 @@
                             android:shadowColor="#03D1CA"
                             android:textColor="@color/white" />
                     </FrameLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/green" />
-
-                    <Button
-                        android:id="@+id/disable_prevention"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/selector2"
-                        android:elevation="20dp"
-                        android:textStyle="bold|italic"
-                        android:gravity="start|center"
-                        android:onClick="disableLockScreen"
-                        android:paddingHorizontal="10dp"
-                        android:paddingVertical="10dp"
-                        android:text="Disable Lock screen"
-                        android:textColor="@color/black"
-                        android:textSize="15sp" />
-
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
